@@ -1,0 +1,989 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BenGurWaves — Home</title>
+
+  <style>
+    /* Pre-save + Listen button styles */
+    .pre-save-btn, .listen-btn {
+      display:inline-block;
+      padding:12px 22px;
+      border-radius:8px;
+      background: rgba(210,184,140,0.95);
+      color:#111;
+      text-decoration:none;
+      font-weight:700;
+      transition: background .18s ease, color .18s ease, transform .12s ease;
+    }
+    .pre-save-btn:hover, .listen-btn:hover,
+    .pre-save-btn:focus, .listen-btn:focus {
+      background:#000; color:#d2b48c; transform: translateY(-2px);
+    }
+
+    /* Small responsive helper */
+    @media (max-width:860px){
+      .featured-inner, .release-card { flex-direction:column; text-align:center; gap:18px; }
+      .featured-thumb, .release-thumb { width:72%; max-width:360px; }
+      .sheet-cards { width:92%; height:320px; }
+      .sheet-card { --card-w:240px; --card-h:300px; }
+    }
+
+    /* Releases text fallback */
+    .release-heading, .release-title, .release-description {
+      color: rgb(255,255,255);
+      transition: color 180ms linear;
+    }
+
+    .sheet-section {
+      min-height: 890px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: none;
+      position: relative;
+    }
+
+    .sheet-container {
+      max-width: 1100px;
+      width: 100%;
+      padding: 40px;
+      box-sizing: border-box;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .sheet-cards {
+      position: relative;
+      width: 760px;
+      height: 420px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap: 0;
+      pointer-events: auto;
+      overflow: visible;
+      transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
+    }
+
+    .sheet-card {
+      --card-w: 300px;
+      --card-h: 380px;
+      position: absolute;
+      width: var(--card-w);
+      height: var(--card-h);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.6);
+      transform-origin: center top;
+      transition:
+        transform 420ms cubic-bezier(.2,.9,.2,1),
+        left 420ms cubic-bezier(.2,.9,.2,1),
+        top 420ms cubic-bezier(.2,.9,.2,1),
+        filter 420ms ease;
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.03);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      will-change: transform, left, top, filter;
+    }
+
+    .sheet-card img {
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+      filter: saturate(0.98) contrast(0.98) brightness(0.98);
+      transform: scale(1.02) translateZ(0);
+      transition: transform 420ms ease, filter 420ms ease;
+      user-select:none;
+      -webkit-user-drag: none;
+    }
+
+    .sheet-card.center {
+      z-index: 30;
+      left: calc(50% - var(--card-w) / 2);
+      top: 0;
+      transform: rotate(0deg) translateY(0);
+    }
+
+    .sheet-card.left {
+      z-index: 20;
+      left: calc(50% - var(--card-w) - 36px);
+      top: 28px;
+      transform: rotate(-10deg) translateY(0);
+    }
+    .sheet-card.right {
+      z-index: 20;
+      left: calc(50% + 36px);
+      top: 28px;
+      transform: rotate(10deg) translateY(0);
+    }
+
+    .sheet-cards:hover .sheet-card.left {
+      left: calc(50% - var(--card-w) - 86px);
+      top: -6px;
+      transform: rotate(-6deg) translateY(-6px);
+    }
+    .sheet-cards:hover .sheet-card.right {
+      left: calc(50% + 86px);
+      top: -6px;
+      transform: rotate(6deg) translateY(-6px);
+    }
+
+    .sheet-cards:hover .sheet-card.center img,
+    .sheet-cards:hover .sheet-card.left img,
+    .sheet-cards:hover .sheet-card.right img {
+      transform: scale(1.03) translateZ(0);
+      filter: saturate(1.02) contrast(1.03) brightness(1);
+    }
+
+    .sheet-card:hover { transform: translateY(-8px) scale(1.01) rotate(0deg); z-index: 60; }
+    .sheet-card:hover img { transform: scale(1.04) translateZ(0); }
+
+    .sheet-label {
+      margin-top: 14px;
+      color: rgba(255,255,255,0.9);
+      font-family: 'Times New Roman', serif;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    .sheet-card a { display:block; width:100%; height:100%; text-decoration:none; color:inherit; }
+    .sheet-card:focus-within { outline: 3px solid rgba(210,184,140,0.12); }
+
+    .gallery-section{
+      min-height: 890px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      background:#0d0d0d;
+    }
+    .gallery-section::before{
+      content:"";
+      position:absolute; inset:0;
+      background: radial-gradient(1200px 600px at 20% 10%, rgba(255,255,255,0.04), transparent 60%),
+                  radial-gradient(900px 500px at 80% 90%, rgba(255,255,255,0.03), transparent 60%);
+      pointer-events:none;
+    }
+    .gallery-inner{
+      position:relative; z-index:2;
+      max-width:1100px; width:100%; padding:40px; box-sizing:border-box;
+    }
+    .gallery-title{
+      margin:0 0 18px 0; text-align:center;
+      color:#fff; font-family:'Chomsky', serif; font-size:2rem; letter-spacing:.3px;
+    }
+
+    /* original grid (kept for fallback) */
+    .gallery-grid{
+      display:grid;
+      grid-template-columns:repeat(12, 1fr);
+      grid-auto-rows:160px;
+      gap:18px;
+      width:100%;
+      user-select:none;
+    }
+
+    .gallery-item{
+      position:relative; overflow:hidden; border-radius:10px;
+      box-shadow:0 16px 38px rgba(0,0,0,0.55);
+      transform:rotate(var(--rot, 0deg));
+      transition: transform .35s ease;
+      cursor:pointer;
+      isolation:isolate;
+      transform-origin:center;
+      will-change: transform;
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+    }
+    .gallery-item:hover{ transform: rotate(var(--rot, 0deg)) scale(1.01); z-index:3; }
+
+    .gallery-item img{
+      position:absolute; inset:0;
+      width:100%; height:100%; object-fit:cover;
+      filter: grayscale(1) contrast(1.05) brightness(0.92);
+      transition: transform .4s ease, filter .35s ease, opacity .25s ease;
+      will-change: transform, filter, opacity;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transform: translateZ(0);
+      user-select:none;
+    }
+    .gallery-item:hover img{ filter:none; transform:scale(1.03); }
+    .gallery-item::after{
+      content: attr(data-desc);
+      position:absolute; left:12px; bottom:12px;
+      color:rgba(255,255,255,0.95);
+      font-family:'Times New Roman', serif; font-size:.92rem;
+      text-shadow:0 2px 10px rgba(0,0,0,.55);
+      pointer-events:none;
+    }
+
+    /* previously set mosaic rules removed/overridden later with the index-specific override */
+
+    .gallery-actions{ display:flex; justify-content:center; margin-top:22px; }
+    .gallery-btn{
+      display:inline-block; padding:12px 22px; border-radius:8px;
+      background: rgba(210,184,140,0.95); color:#111; text-decoration:none; font-weight:700;
+      transition: background .18s ease, color .18s ease, transform .12s ease;
+    }
+    .gallery-btn:hover, .gallery-btn:focus{ background:#000; color:#d2b48c; transform: translateY(-2px); }
+
+    @media (max-width: 980px){
+      .gallery-grid{ grid-template-columns: repeat(8, 1fr); grid-auto-rows:140px; }
+      .gallery-item:nth-child(1){ grid-column:1 / span 5; grid-row:1 / span 2; }
+      .gallery-item:nth-child(2){ grid-column:6 / span 3; grid-row:1 / span 1; }
+      .gallery-item:nth-child(3){ grid-column:5 / span 4; grid-row:2 / span 2; }
+      .gallery-item:nth-child(4){ grid-column:1 / span 5; grid-row:3 / span 1; }
+    }
+    @media (max-width: 640px){
+      .gallery-grid{ grid-template-columns: repeat(6, 1fr); grid-auto-rows:120px; gap:14px; }
+      .gallery-item:nth-child(1){ grid-column:1 / span 6; grid-row:1 / span 2; }
+      .gallery-item:nth-child(2){ grid-column:1 / span 3; grid-row:3 / span 1; }
+      .gallery-item:nth-child(3){ grid-column:4 / span 3; grid-row:3 / span 2; }
+      .gallery-item:nth-child(4){ grid-column:1 / span 6; grid-row:5 / span 1; }
+    }
+
+    .lightbox{
+      position:fixed; inset:0; display:none; align-items:center; justify-content:center;
+      background:rgba(0,0,0,.78); z-index:2000; padding:24px;
+    }
+    .lightbox.active{ display:flex; }
+    .lightbox-img{
+      max-width:90vw; max-height:80vh; border-radius:10px;
+      box-shadow:0 20px 60px rgba(0,0,0,.7);
+    }
+    .lightbox-desc{
+      margin-top:12px; color:#fff; text-align:center; font-family:'Times New Roman', serif;
+    }
+    .lightbox-close{
+      position:absolute; top:16px; right:22px; font-size:32px; line-height:1; color:#fff; cursor:pointer;
+      text-shadow:0 2px 8px rgba(0,0,0,.7);
+    }
+
+    /* styles.css content appended below (kept intact) */
+
+    /* ================= Full Background & Body ================= */
+    html {
+      height: 100%;
+      background: url('DSC_1391_Mono.JPG.png') no-repeat center center fixed;
+      background-size: cover;
+      background-color: black;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Times New Roman', serif;
+      color: #fff;
+      text-align: center;
+      min-height: 100%;
+      opacity: 0;
+      transition: opacity 1s ease;
+      position: relative;
+      overflow-x: hidden;
+    }
+    body.loaded {
+      opacity: 1;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('DSC_1391_Color.png') no-repeat center center fixed;
+      background-size: cover;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1s ease;
+      z-index: -1;
+    }
+    body.colorful-bg::before {
+      opacity: 1;
+    }
+
+    header.site {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 40px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    header nav.links-left {
+      display: flex;
+      gap: 20px;
+    }
+    header nav.links-left a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    header nav.links-left a:hover {
+      color: #d2b48c;
+    }
+
+    header .brand {
+      font-family: 'Chomsky', serif;
+      font-size: 2rem;
+      color: #fff;
+      text-decoration: none;
+      transition: opacity 0.3s ease;
+    }
+
+    header nav.links-right {
+      display: flex;
+      gap: 15px;
+    }
+    header nav.links-right a img {
+      width: 24px;
+      height: 24px;
+      vertical-align: middle;
+      filter: brightness(1) invert(1);
+    }
+    header nav.links-right a:hover img {
+      filter: brightness(1) invert(0.7);
+    }
+
+    .hero-intro {
+      height: 890px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .hero-name {
+      font-family: 'Chomsky', serif;
+      font-size: 6rem;
+      margin: 0;
+      color: #fff;
+      opacity: 1;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .hero-description {
+      font-family: 'Times New Roman', serif;
+      font-size: 1.2rem;
+      margin-top: 10px;
+      opacity: 1;
+      transition: opacity 0.4s ease;
+    }
+
+    .hero-quote-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 1;
+      transition: opacity 0.4s ease;
+    }
+
+    .hero-quote {
+      font-family: 'Times New Roman', serif;
+      font-size: 25px;
+      margin-top: 20px;
+      max-width: 800px;
+      line-height: 1.3;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .hero-quote-subtext {
+      font-family: 'Times New Roman', serif;
+      font-size: 16px;
+      margin-top: 5px;
+      color: rgba(255,255,255,0.7);
+      font-style: italic;
+    }
+
+    .content-container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 40px 20px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 8px;
+      line-height: 1.6;
+      text-align: left;
+    }
+
+    .intro-fade {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1.5s ease, transform 1.5s ease;
+      transition-delay: 2s;
+    }
+    body.loaded .intro-fade {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media only screen and (max-width: 768px) {
+      .hero-name { font-size: 4rem; }
+      .hero-description { font-size: 1rem; }
+      .hero-quote { font-size: 1.2rem; max-width: 90%; }
+      .hero-quote-subtext { font-size: 0.9rem; }
+      header nav.links-left, header nav.links-right { gap: 10px; }
+    }
+
+    .gallery-section {
+      min-height: 100vh;
+      background: #111;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+    }
+
+    .gallery-title {
+      font-family: 'Chomsky', serif;
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-gap: 1.5rem;
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.3s ease, filter 0.3s ease;
+      filter: grayscale(100%);
+    }
+
+    .gallery-item img:hover {
+      transform: scale(1.05);
+      filter: grayscale(0%);
+    }
+
+    .gallery-btn {
+      margin-top: 2rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      background: #222;
+      color: white;
+      text-decoration: none;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .gallery-btn:hover {
+      background: white;
+      color: black;
+    }
+
+    transform: translateZ(0) scale3d(1.02,1.02,1);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    -moz-transform: translate3d(0,0,0);
+    -webkit-transform: translate3d(0,0,0);
+    opacity:0.999;
+    will-change: transform, filter, opacity;
+
+    .lightbox {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 1rem;
+      z-index: 9999;
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    .lightbox-img {
+      max-width: 90%;
+      max-height: 70%;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+    }
+
+    .lightbox-desc {
+      color: #ddd;
+      font-size: 1rem;
+      max-width: 90%;
+      text-align: center;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      font-size: 2rem;
+      color: white;
+      cursor: pointer;
+    }
+
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    .gallery-item img {
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      -moz-backface-visibility: hidden;
+      will-change: transform, filter, opacity;
+    }
+
+    .gallery-item img:hover {
+      transform: scale(1.03);
+    }
+
+    .gallery-grid {
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .hero-intro, .content-container {
+      width: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    @media only screen and (max-width: 768px) {
+      .gallery-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        grid-gap: 1rem;
+      }
+      .hero-intro { height: auto; padding: 20px 10px; }
+      .content-container { padding: 20px 10px; margin: 20px auto; }
+    }
+
+    /* INDEX-PAGE: override mosaic layout so gallery items use 2-column layout with aspect rules
+       This resets any earlier nth-child grid placements and enforces:
+       left column = wider (2fr) for 16:9 images; right column = narrower (1fr) for squares. */
+    .gallery-grid { display:grid; grid-template-columns: 2fr 1fr; gap:18px; align-items:start; }
+    .gallery-grid .gallery-item { grid-column: auto !important; grid-row: auto !important; }
+    .gallery-item.aspect-16-9 { aspect-ratio: 16 / 9; }
+    .gallery-item.aspect-1-1 { aspect-ratio: 1 / 1; }
+
+    @media (max-width: 980px) {
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-item.aspect-16-9,
+      .gallery-item.aspect-1-1 { aspect-ratio: auto; width:100%; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site">
+    <nav class="links-left">
+      <a href="index.html">Home</a>
+      <a href="releases.html">Releases</a>
+      <a href="merch.html">Merch</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="me.html">Me</a>
+      <a href="david.html">David</a>
+    </nav>
+
+    <a href="index.html" class="brand">BenGurWaves</a>
+
+    <nav class="links-right">
+      <a href="https://youtube.com/@bengurwaves"><img src="icons8-youtube-logo.svg" alt="YouTube"></a>
+      <a href="https://instagram.com/bengurwaves"><img src="icons8-instagram-logo.svg" alt="Instagram"></a>
+      <a href="https://www.tiktok.com/@ben_gur_waves"><img src="tiktok-48.png" alt="TikTok"></a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-intro" aria-label="Hero">
+    <h1 class="hero-name">BenGurWaves</h1>
+    <p class="hero-description">Pianist, Composer, Storyteller</p>
+    <div class="hero-quote-wrapper">
+      <p class="hero-quote">
+        “The piano gives you black and white,<br>
+        but the challenge is to make every color heard.”
+      </p>
+      <p class="hero-quote-subtext">(Hover here to see it come alive)</p>
+    </div>
+  </section>
+
+  <!-- Featured Section -->
+  <section
+    class="featured-section"
+    aria-label="Featured — Finally Home"
+    style="
+      min-height: 890px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: url('Copy%20of%20Finally%20Home%20-%20The%20Album%281%29.png') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+    "
+  >
+    <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.45); z-index: 1;"></div>
+
+    <div style="position: relative; z-index: 2; max-width: 1100px; width: 100%; padding: 40px; display:flex; gap:30px; align-items:center; box-sizing:border-box;">
+      <div style="flex: 0 0 320px; display:flex; align-items:center; justify-content:center;">
+        <img src="Finally Home Thumb (Best Reso).jpg" alt="Finally Home — thumbnail" style="max-width:100%; height:auto; border-radius:8px; box-shadow: 0 6px 20px rgba(0,0,0,0.6);">
+      </div>
+      <div style="flex: 1 1 auto; color:#fff; text-align:left;">
+        <h2 style="font-family: 'Chomsky', serif; font-size: 2.4rem; margin: 0 0 6px 0;">Finally Home - The Album</h2>
+        <p style="margin: 0 0 12px 0; font-family: 'Times New Roman', serif; font-size: 1rem; opacity: 0.9;">- BenGurWaves</p>
+
+        <p style="margin-top: 6px; color: rgba(255,255,255,0.95); line-height:1.6; max-width: 700px;">
+          <strong>Finally Home</strong> is my story. Each piece, or song, is a part of who I have been.
+          Every part of the album carries my worries, fears, joys, sadness, and struggles. I wrote this album in sweat, tears, and countless late nights. This is my album… no, correction, this is me.
+        </p>
+
+        <p style="margin-top: 18px; font-weight:600;">Release Date: October 10, 2025</p>
+
+        <p style="margin-top: 18px;">
+          <a href="releases.html" class="pre-save-btn" title="Pre-save Finally Home">Pre-Save</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Releases Section (full-screen, uses main site bg) -->
+  <section
+    class="releases-full"
+    aria-label="Releases"
+    style="min-height: 890px; display:flex; align-items:center; justify-content:center; position: relative; background: none;"
+  >
+    <div style="position: relative; z-index: 2; max-width: 1100px; width:100%; padding: 40px; box-sizing:border-box; display:flex; align-items:center; gap:28px;">
+      <div class="release-card" style="display:flex; gap:24px; align-items:center; width:100%;">
+        <div class="thumb" style="flex:0 0 260px;">
+          <img src="Screen%20Shot%202025-06-29%20at%203.57.42%20PM%20copy.png" alt="The Absent Waltz — thumbnail" style="width:100%; height:auto; border-radius:6px; box-shadow: 0 6px 18px rgba(0,0,0,0.45);">
+        </div>
+        <div class="info" style="flex:1 1 auto; color:#fff;">
+          <h3 class="release-heading" style="margin:0 0 6px 0; font-family:'Chomsky', serif; font-size:1.6rem;">Latest Single</h3>
+
+          <p class="release-title" style="margin:0 0 10px 0; font-family:'Times New Roman', serif; font-weight:700; font-size:1.05rem;">
+            The Absent Waltz – A Waltz In E Minor | Original Piano Composition
+          </p>
+
+          <p class="release-description" style="margin:0 0 12px 0; color:rgba(255,255,255,0.95); line-height:1.6; max-width:820px;">
+            The Absent Waltz is a gentle piano solo that drifts like a memory half-remembered. With a waltz rhythm softened by emotion, it carries a bittersweet calm — like dancing alone in a quiet, empty room. Each note feels both distant and close, inviting reflection and stillness.
+          </p>
+
+          <p style="margin-top:12px;">
+            <a href="releases.html" class="listen-btn" title="Listen Now — The Absent Waltz">Listen Now</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sheet Music Section -->
+  <section class="sheet-section" aria-label="Sheet Music">
+    <div class="sheet-container">
+      <div>
+        <div class="sheet-cards" tabindex="0" aria-label="Sheet music examples (click to open sheet music releases)">
+          <div class="sheet-card left" role="button">
+            <a href="releases.html#sheet-music" title="Open sheet music - left">
+              <img src="Screen%20Shot%202025-08-19%20at%204.29.10%20PM.png" alt="Sheet 1">
+            </a>
+          </div>
+
+          <div class="sheet-card center" role="button">
+            <a href="releases.html#sheet-music" title="Open sheet music - center">
+              <img src="Screen%20Shot%202025-08-19%20at%204.29.44%20PM.png" alt="Sheet 2">
+            </a>
+          </div>
+
+          <div class="sheet-card right" role="button">
+            <a href="releases.html#sheet-music" title="Open sheet music - right">
+              <img src="Screen%20Shot%202025-08-19%20at%204.30.02%20PM.png" alt="Sheet 3">
+            </a>
+          </div>
+        </div>
+
+        <div class="sheet-label">Sheet Music — hover the artwork to fan them out</div>
+      </div>
+    </div>
+  </section>
+
+  <main class="site content-container intro-fade">
+
+<section class="gallery-section">
+  <h2 class="gallery-title">Gallery</h2>
+
+  <div class="gallery-grid">
+    <!-- Row 1 -->
+    <div class="gallery-item" id="frustration">
+      <img src="Frustration_Thumbnail_Color.jpg" alt="Frustration">
+    </div>
+    <div class="gallery-item" id="finally-home">
+      <img src="Finally Home Thumb (Best Reso).jpg" alt="Finally Home">
+    </div>
+
+    <!-- Row 2 -->
+    <div class="gallery-item" id="absent-waltz">
+      <img src="The_Absent_Waltz_Color_copy.png" alt="Absent Waltz">
+    </div>
+    <div class="gallery-item" id="gentle-resonance">
+      <img src="gentle-resonance-color.jpg" alt="Gentle Resonance">
+    </div>
+  </div>
+
+  <style>
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr; /* left = wide, right = square */
+      grid-template-rows: auto auto;
+      gap: 24px;
+    }
+
+    /* Row 1 sizes */
+    #frustration {
+      grid-column: 1 / 2;
+      aspect-ratio: 16 / 9;
+    }
+    #finally-home {
+      grid-column: 2 / 3;
+      aspect-ratio: 1 / 1;
+    }
+
+    /* Row 2 sizes */
+    #absent-waltz {
+      grid-column: 1 / 2;
+      aspect-ratio: 1 / 1;
+    }
+    #gentle-resonance {
+      grid-column: 2 / 3;
+      aspect-ratio: 16 / 9;
+    }
+
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(1);
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+
+    .gallery-item:hover img {
+      filter: grayscale(0);
+      transform: scale(1.03);
+    }
+
+    /* Space between row 1 and 2 */
+    .gallery-grid > #absent-waltz {
+      margin-top: 24px;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px) {
+      .gallery-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, auto);
+        gap: 16px;
+      }
+      .gallery-item {
+        aspect-ratio: auto;
+        height: 240px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .gallery-item {
+        height: 180px;
+      }
+    }
+  </style>
+</section>
+
+
+  </main>
+
+  <div class="lightbox" id="lightbox">
+    <span class="lightbox-close">&times;</span>
+    <img class="lightbox-img" src="" alt="">
+    <p class="lightbox-desc"></p>
+  </div>
+
+<section class="about-section" aria-label="About BenGurWaves" style="min-height:600px; display:flex; align-items:center; justify-content:center; background:#0a0a0a; position:relative; padding:60px 20px; box-sizing:border-box;">
+  <div style="max-width:1000px; width:100%; display:flex; flex-direction:row; gap:40px; align-items:center; flex-wrap:wrap;">
+    <div style="flex:1 1 320px; display:flex; justify-content:center;">
+      <img src="portrait.jpg" alt="Ben Gur" style="width:100%; max-width:300px; border-radius:10px; box-shadow:0 14px 36px rgba(0,0,0,0.6);">
+    </div>
+    <div style="flex:2 1 500px; color:#fff;">
+      <h2 style="font-family:'Chomsky', serif; font-size:2rem; margin-bottom:16px;">About BenGurWaves</h2>
+      <p style="font-family:'Times New Roman', serif; font-size:1rem; line-height:1.6; opacity:0.9; margin-bottom:12px;">
+        BenGurWaves is a pianist, composer, and storyteller. Through music, he explores emotions, memories, and the unseen threads that connect moments of life. Every composition reflects his journey — from quiet reflection to sweeping crescendos, capturing the nuances of human experience.
+      </p>
+      <p style="font-family:'Times New Roman', serif; font-size:1rem; line-height:1.6; opacity:0.9;">
+        Inspired by the subtle interplay of light and shadow, sound and silence, BenGurWaves invites listeners to step into a world where every note tells a story, and every melody is a reflection of the soul.
+      </p>
+    </div>
+  </div>
+</section>
+
+ <script>
+  (function(){
+    const items = document.querySelectorAll('.gallery-item');
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = document.querySelector('.lightbox-img');
+    const lbDesc = document.querySelector('.lightbox-desc');
+    const lbClose = document.querySelector('.lightbox-close');
+
+    items.forEach(item => {
+      const img = item.querySelector('img');
+      const bw = item.getAttribute('data-bw') || img.getAttribute('src');
+      const color = item.getAttribute('data-color') || bw;
+      const id = item.getAttribute('data-id') || 'top';
+
+      if (color) {
+        const p = new Image();
+        p.src = color;
+      }
+
+      item.addEventListener('click', () => {
+        window.location.href = `gallery.html#${encodeURIComponent(id)}`;
+      });
+    });
+
+    if(lbClose){
+      lbClose.addEventListener('click', () => lightbox.classList.remove('active'));
+      lightbox.addEventListener('click', (e) => { if(e.target === lightbox) lightbox.classList.remove('active'); });
+    }
+  })();
+
+    window.addEventListener("load", () => {
+      document.body.classList.add("loaded");
+      requestAnimationFrame(updateReleaseTextColors);
+    });
+
+    const heroQuoteWrapper = document.querySelector('.hero-quote-wrapper');
+    heroQuoteWrapper && heroQuoteWrapper.addEventListener('mouseenter', () => {
+      document.body.classList.add('colorful-bg');
+    });
+    heroQuoteWrapper && heroQuoteWrapper.addEventListener('mouseleave', () => {
+      document.body.classList.remove('colorful-bg');
+    });
+
+    const heroName = document.querySelector('.hero-name');
+    const heroDesc = document.querySelector('.hero-description');
+    const headerBrand = document.querySelector('.brand');
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const triggerPoint = 250;
+      const qwrap = document.querySelector('.hero-quote-wrapper');
+      if (scrollY < triggerPoint) {
+        heroName && (heroName.style.transform = `scale(${1 - scrollY / 600})`);
+        heroDesc && (heroDesc.style.opacity = 1 - scrollY / triggerPoint);
+        if (qwrap) qwrap.style.opacity = 1 - scrollY / triggerPoint;
+        headerBrand && (headerBrand.style.opacity = 0);
+      } else {
+        heroName && (heroName.style.transform = "scale(0)");
+        heroDesc && (heroDesc.style.opacity = 0);
+        if (qwrap) qwrap.style.opacity = 0;
+        headerBrand && (headerBrand.style.opacity = 1);
+      }
+    });
+
+    const releaseHeading = document.querySelector('.release-heading');
+    const releaseTitle = document.querySelector('.release-title');
+    const releaseDesc = document.querySelector('.release-description');
+
+    function lerp(a,b,t){ return a + (b-a)*t; }
+    function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+    function rgbToStr(r,g,b){ return 'rgb(' + Math.round(r) + ',' + Math.round(b) + ',' + Math.round(b) + ')'; }
+
+    function rgbToStr(r,g,b){ return 'rgb(' + Math.round(r) + ',' + Math.round(g) + ',' + Math.round(b) + ')'; }
+
+    function colorFromProgress(p){
+      p = clamp(p,0,1);
+      if (p <= 0.5){
+        const t = p / 0.5;
+        const r = lerp(255,181,t), g = lerp(255,181,t), b = lerp(255,181,t);
+        return rgbToStr(r,g,b);
+      } else {
+        const t = (p - 0.5) / 0.5;
+        const r = lerp(181,0,t), g = lerp(181,0,t), b = lerp(181,0,t);
+        return rgbToStr(r,g,b);
+      }
+    }
+
+    function updateReleaseTextColors(){
+      if(!releaseTitle && !releaseDesc && !releaseHeading) return;
+      const triggerY = window.innerHeight / 3;
+
+      if (releaseHeading){
+        const rectH = releaseHeading.getBoundingClientRect();
+        const startH = triggerY + 260;
+        const endH   = triggerY - 20;
+        const pH = clamp((startH - rectH.top) / (startH - endH), 0, 1);
+        releaseHeading.style.color = colorFromProgress(pH);
+      }
+
+      if (releaseTitle){
+        const rectT = releaseTitle.getBoundingClientRect();
+        const startT = triggerY + 200;
+        const endT   = triggerY - 50;
+        const pT = clamp((startT - rectT.top) / (startT - endT), 0, 1);
+        releaseTitle.style.color = colorFromProgress(pT);
+      }
+
+      if (releaseDesc){
+        const rectD = releaseDesc.getBoundingClientRect();
+        const startD = triggerY + 60;
+        const endD   = triggerY - 200;
+        const pD = clamp((startD - rectD.top) / (startD - endD), 0, 1);
+        releaseDesc.style.color = colorFromProgress(pD);
+      }
+    }
+
+    let ticking = false;
+    function onScrollRAF(){
+      if(!ticking){
+        requestAnimationFrame(() => {
+          updateReleaseTextColors();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+    window.addEventListener('scroll', onScrollRAF);
+    window.addEventListener('resize', onScrollRAF);
+
+    setTimeout(() => requestAnimationFrame(updateReleaseTextColors), 300);
+    setTimeout(() => requestAnimationFrame(updateReleaseTextColors), 1100);
+
+    const sheetCards = document.querySelector('.sheet-cards');
+    sheetCards && sheetCards.addEventListener('focus', () => sheetCards.classList.add('focused'));
+    sheetCards && sheetCards.classList.add('focused')
+    sheetCards && sheetCards.addEventListener('blur', () => sheetCards.classList.remove('focused'));
+    sheetCards && sheetCards.addEventListener('touchstart', () => sheetCards.classList.add('touched'), {passive:true});
+    sheetCards && sheetCards.addEventListener('touchend', () => setTimeout(()=> sheetCards && sheetCards.classList.remove('touched'), 350));
+  </script>
+  <footer style="text-align:center; padding:20px; font-size:0.9rem; color:#aaa;">
+  ©BenGurWaves2025<br>
+  ALL RIGHTS RESERVED
+</footer>
+
+</body>
+</html>
