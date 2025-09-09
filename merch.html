@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Merch | BenGurWaves</title>
+
+  <style>
+    /* Pre-save + Listen button styles */
+    .pre-save-btn, .listen-btn {
+      display:inline-block;
+      padding:12px 22px;
+      border-radius:8px;
+      background: rgba(210,184,140,0.95);
+      color:#111;
+      text-decoration:none;
+      font-weight:700;
+      transition: background .18s ease, color .18s ease, transform .12s ease;
+    }
+    .pre-save-btn:hover, .listen-btn:hover,
+    .pre-save-btn:focus, .listen-btn:focus {
+      background:#000; color:#d2b48c; transform: translateY(-2px);
+    }
+
+    /* Small responsive helper */
+    @media (max-width:860px){
+      .featured-inner, .release-card { flex-direction:column; text-align:center; gap:18px; }
+      .featured-thumb, .release-thumb { width:72%; max-width:360px; }
+      .sheet-cards { width:92%; height:320px; }
+      .sheet-card { --card-w:240px; --card-h:300px; }
+    }
+
+    /* Releases text fallback */
+    .release-heading, .release-title, .release-description {
+      color: rgb(255,255,255);
+      transition: color 180ms linear;
+    }
+
+    .sheet-section {
+      min-height: 890px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: none;
+      position: relative;
+    }
+
+    .sheet-container {
+      max-width: 1100px;
+      width: 100%;
+      padding: 40px;
+      box-sizing: border-box;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .sheet-cards {
+      position: relative;
+      width: 760px;
+      height: 420px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap: 0;
+      pointer-events: auto;
+      overflow: visible;
+      transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
+    }
+
+    .sheet-card {
+      --card-w: 300px;
+      --card-h: 380px;
+      position: absolute;
+      width: var(--card-w);
+      height: var(--card-h);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.6);
+      transform-origin: center top;
+      transition:
+        transform 420ms cubic-bezier(.2,.9,.2,1),
+        left 420ms cubic-bezier(.2,.9,.2,1),
+        top 420ms cubic-bezier(.2,.9,.2,1),
+        filter 420ms ease;
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.03);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      will-change: transform, left, top, filter;
+    }
+
+    .sheet-card img {
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+      filter: saturate(0.98) contrast(0.98) brightness(0.98);
+      transform: scale(1.02) translateZ(0);
+      transition: transform 420ms ease, filter 420ms ease;
+      user-select:none;
+      -webkit-user-drag: none;
+    }
+
+    .sheet-card.center {
+      z-index: 30;
+      left: calc(50% - var(--card-w) / 2);
+      top: 0;
+      transform: rotate(0deg) translateY(0);
+    }
+
+    .sheet-card.left {
+      z-index: 20;
+      left: calc(50% - var(--card-w) - 36px);
+      top: 28px;
+      transform: rotate(-10deg) translateY(0);
+    }
+    .sheet-card.right {
+      z-index: 20;
+      left: calc(50% + 36px);
+      top: 28px;
+      transform: rotate(10deg) translateY(0);
+    }
+
+    .sheet-cards:hover .sheet-card.left {
+      left: calc(50% - var(--card-w) - 86px);
+      top: -6px;
+      transform: rotate(-6deg) translateY(-6px);
+    }
+    .sheet-cards:hover .sheet-card.right {
+      left: calc(50% + 86px);
+      top: -6px;
+      transform: rotate(6deg) translateY(-6px);
+    }
+
+    .sheet-cards:hover .sheet-card.center img,
+    .sheet-cards:hover .sheet-card.left img,
+    .sheet-cards:hover .sheet-card.right img {
+      transform: scale(1.03) translateZ(0);
+      filter: saturate(1.02) contrast(1.03) brightness(1);
+    }
+
+    .sheet-card:hover { transform: translateY(-8px) scale(1.01) rotate(0deg); z-index: 60; }
+    .sheet-card:hover img { transform: scale(1.04) translateZ(0); }
+
+    .sheet-label {
+      margin-top: 14px;
+      color: rgba(255,255,255,0.9);
+      font-family: 'Times New Roman', serif;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    .sheet-card a { display:block; width:100%; height:100%; text-decoration:none; color:inherit; }
+    .sheet-card:focus-within { outline: 3px solid rgba(210,184,140,0.12); }
+
+    .gallery-section{
+      min-height: 890px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      background:#0d0d0d;
+    }
+    .gallery-section::before{
+      content:"";
+      position:absolute; inset:0;
+      background: radial-gradient(1200px 600px at 20% 10%, rgba(255,255,255,0.04), transparent 60%),
+                  radial-gradient(900px 500px at 80% 90%, rgba(255,255,255,0.03), transparent 60%);
+      pointer-events:none;
+    }
+    .gallery-inner{
+      position:relative; z-index:2;
+      max-width:1100px; width:100%; padding:40px; box-sizing:border-box;
+    }
+    .gallery-title{
+      margin:0 0 18px 0; text-align:center;
+      color:#fff; font-family:'Chomsky', serif; font-size:2rem; letter-spacing:.3px;
+    }
+
+    /* original grid (kept for fallback) */
+    .gallery-grid{
+      display:grid;
+      grid-template-columns:repeat(12, 1fr);
+      grid-auto-rows:160px;
+      gap:18px;
+      width:100%;
+      user-select:none;
+    }
+
+    .gallery-item{
+      position:relative; overflow:hidden; border-radius:10px;
+      box-shadow:0 16px 38px rgba(0,0,0,0.55);
+      transform:rotate(var(--rot, 0deg));
+      transition: transform .35s ease;
+      cursor:pointer;
+      isolation:isolate;
+      transform-origin:center;
+      will-change: transform;
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+    }
+    .gallery-item:hover{ transform: rotate(var(--rot, 0deg)) scale(1.01); z-index:3; }
+
+    .gallery-item img{
+      position:absolute; inset:0;
+      width:100%; height:100%; object-fit:cover;
+      filter: grayscale(1) contrast(1.05) brightness(0.92);
+      transition: transform .4s ease, filter .35s ease, opacity .25s ease;
+      will-change: transform, filter, opacity;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transform: translateZ(0);
+      user-select:none;
+    }
+    .gallery-item:hover img{ filter:none; transform:scale(1.03); }
+    .gallery-item::after{
+      content: attr(data-desc);
+      position:absolute; left:12px; bottom:12px;
+      color:rgba(255,255,255,0.95);
+      font-family:'Times New Roman', serif; font-size:.92rem;
+      text-shadow:0 2px 10px rgba(0,0,0,.55);
+      pointer-events:none;
+    }
+
+    /* previously set mosaic rules removed/overridden later with the index-specific override */
+
+    .gallery-actions{ display:flex; justify-content:center; margin-top:22px; }
+    .gallery-btn{
+      display:inline-block; padding:12px 22px; border-radius:8px;
+      background: rgba(210,184,140,0.95); color:#111; text-decoration:none; font-weight:700;
+      transition: background .18s ease, color .18s ease, transform .12s ease;
+    }
+    .gallery-btn:hover, .gallery-btn:focus{ background:#000; color:#d2b48c; transform: translateY(-2px); }
+
+    @media (max-width: 980px){
+      .gallery-grid{ grid-template-columns: repeat(8, 1fr); grid-auto-rows:140px; }
+      .gallery-item:nth-child(1){ grid-column:1 / span 5; grid-row:1 / span 2; }
+      .gallery-item:nth-child(2){ grid-column:6 / span 3; grid-row:1 / span 1; }
+      .gallery-item:nth-child(3){ grid-column:5 / span 4; grid-row:2 / span 2; }
+      .gallery-item:nth-child(4){ grid-column:1 / span 5; grid-row:3 / span 1; }
+    }
+    @media (max-width: 640px){
+      .gallery-grid{ grid-template-columns: repeat(6, 1fr); grid-auto-rows:120px; gap:14px; }
+      .gallery-item:nth-child(1){ grid-column:1 / span 6; grid-row:1 / span 2; }
+      .gallery-item:nth-child(2){ grid-column:1 / span 3; grid-row:3 / span 1; }
+      .gallery-item:nth-child(3){ grid-column:4 / span 3; grid-row:3 / span 2; }
+      .gallery-item:nth-child(4){ grid-column:1 / span 6; grid-row:5 / span 1; }
+    }
+
+    .lightbox{
+      position:fixed; inset:0; display:none; align-items:center; justify-content:center;
+      background:rgba(0,0,0,.78); z-index:2000; padding:24px;
+    }
+    .lightbox.active{ display:flex; }
+    .lightbox-img{
+      max-width:90vw; max-height:80vh; border-radius:10px;
+      box-shadow:0 20px 60px rgba(0,0,0,.7);
+    }
+    .lightbox-desc{
+      margin-top:12px; color:#fff; text-align:center; font-family:'Times New Roman', serif;
+    }
+    .lightbox-close{
+      position:absolute; top:16px; right:22px; font-size:32px; line-height:1; color:#fff; cursor:pointer;
+      text-shadow:0 2px 8px rgba(0,0,0,.7);
+    }
+
+    /* styles.css content appended below (kept intact) */
+
+    /* ================= Full Background & Body ================= */
+    html {
+      height: 100%;
+      background: url('DSC_1391_Mono.JPG.png') no-repeat center center fixed;
+      background-size: cover;
+      background-color: black;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Times New Roman', serif;
+      color: #fff;
+      text-align: center;
+      min-height: 100%;
+      opacity: 0;
+      transition: opacity 1s ease;
+      position: relative;
+      overflow-x: hidden;
+    }
+    body.loaded {
+      opacity: 1;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('DSC_1391_Color.png') no-repeat center center fixed;
+      background-size: cover;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1s ease;
+      z-index: -1;
+    }
+    body.colorful-bg::before {
+      opacity: 1;
+    }
+
+    header.site {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 40px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    header nav.links-left {
+      display: flex;
+      gap: 20px;
+    }
+    header nav.links-left a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    header nav.links-left a:hover {
+      color: #d2b48c;
+    }
+
+    header .brand {
+      font-family: 'Chomsky', serif;
+      font-size: 2rem;
+      color: #fff;
+      text-decoration: none;
+      transition: opacity 0.3s ease;
+    }
+
+    header nav.links-right {
+      display: flex;
+      gap: 15px;
+    }
+    header nav.links-right a img {
+      width: 24px;
+      height: 24px;
+      vertical-align: middle;
+      filter: brightness(1) invert(1);
+    }
+    header nav.links-right a:hover img {
+      filter: brightness(1) invert(0.7);
+    }
+
+    .hero-intro {
+      height: 890px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .hero-name {
+      font-family: 'Chomsky', serif;
+      font-size: 6rem;
+      margin: 0;
+      color: #fff;
+      opacity: 1;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .hero-description {
+      font-family: 'Times New Roman', serif;
+      font-size: 1.2rem;
+      margin-top: 10px;
+      opacity: 1;
+      transition: opacity 0.4s ease;
+    }
+
+    .hero-quote-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 1;
+      transition: opacity 0.4s ease;
+    }
+
+    .hero-quote {
+      font-family: 'Times New Roman', serif;
+      font-size: 25px;
+      margin-top: 20px;
+      max-width: 800px;
+      line-height: 1.3;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .hero-quote-subtext {
+      font-family: 'Times New Roman', serif;
+      font-size: 16px;
+      margin-top: 5px;
+      color: rgba(255,255,255,0.7);
+      font-style: italic;
+    }
+
+    .content-container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 40px 20px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 8px;
+      line-height: 1.6;
+      text-align: left;
+    }
+
+    .intro-fade {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1.5s ease, transform 1.5s ease;
+      transition-delay: 2s;
+    }
+    body.loaded .intro-fade {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media only screen and (max-width: 768px) {
+      .hero-name { font-size: 4rem; }
+      .hero-description { font-size: 1rem; }
+      .hero-quote { font-size: 1.2rem; max-width: 90%; }
+      .hero-quote-subtext { font-size: 0.9rem; }
+      header nav.links-left, header nav.links-right { gap: 10px; }
+    }
+
+    .gallery-section {
+      min-height: 100vh;
+      background: #111;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+    }
+
+    .gallery-title {
+      font-family: 'Chomsky', serif;
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-gap: 1.5rem;
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.3s ease, filter 0.3s ease;
+      filter: grayscale(100%);
+    }
+
+    .gallery-item img:hover {
+      transform: scale(1.05);
+      filter: grayscale(0%);
+    }
+
+    .gallery-btn {
+      margin-top: 2rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      background: #222;
+      color: white;
+      text-decoration: none;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .gallery-btn:hover {
+      background: white;
+      color: black;
+    }
+
+    transform: translateZ(0) scale3d(1.02,1.02,1);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    -moz-transform: translate3d(0,0,0);
+    -webkit-transform: translate3d(0,0,0);
+    opacity:0.999;
+    will-change: transform, filter, opacity;
+
+    .lightbox {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 1rem;
+      z-index: 9999;
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    .lightbox-img {
+      max-width: 90%;
+      max-height: 70%;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+    }
+
+    .lightbox-desc {
+      color: #ddd;
+      font-size: 1rem;
+      max-width: 90%;
+      text-align: center;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      font-size: 2rem;
+      color: white;
+      cursor: pointer;
+    }
+
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    .gallery-item img {
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      -moz-backface-visibility: hidden;
+      will-change: transform, filter, opacity;
+    }
+
+    .gallery-item img:hover {
+      transform: scale(1.03);
+    }
+
+    .gallery-grid {
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .hero-intro, .content-container {
+      width: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    @media only screen and (max-width: 768px) {
+      .gallery-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        grid-gap: 1rem;
+      }
+      .hero-intro { height: auto; padding: 20px 10px; }
+      .content-container { padding: 20px 10px; margin: 20px auto; }
+    }
+
+    /* INDEX-PAGE: override mosaic layout so gallery items use 2-column layout with aspect rules
+       This resets any earlier nth-child grid placements and enforces:
+       left column = wider (2fr) for 16:9 images; right column = narrower (1fr) for squares. */
+    .gallery-grid { display:grid; grid-template-columns: 2fr 1fr; gap:18px; align-items:start; }
+    .gallery-grid .gallery-item { grid-column: auto !important; grid-row: auto !important; }
+    .gallery-item.aspect-16-9 { aspect-ratio: 16 / 9; }
+    .gallery-item.aspect-1-1 { aspect-ratio: 1 / 1; }
+
+    @media (max-width: 980px) {
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-item.aspect-16-9,
+      .gallery-item.aspect-1-1 { aspect-ratio: auto; width:100%; }
+    }
+
+    /* Merch iframe area */
+    .merch-frame {
+      width: 100%;
+      height: calc(100vh - 140px); /* leaves room for header + footer */
+      border: none;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header (copied exactly from index) -->
+  <header class="site">
+    <nav class="links-left">
+      <a href="index.html">Home</a>
+      <a href="releases.html">Releases</a>
+      <a href="merch.html">Merch</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="me.html">Me</a>
+      <a href="david.html">David</a>
+    </nav>
+
+    <nav class="links-right">
+      <a href="https://youtube.com/@bengurwaves"><img src="icons8-youtube-logo.svg" alt="YouTube"></a>
+      <a href="https://instagram.com/bengurwaves"><img src="icons8-instagram-logo.svg" alt="Instagram"></a>
+      <a href="https://www.tiktok.com/@ben_gur_waves"><img src="tiktok-48.png" alt="TikTok"></a>
+    </nav>
+  </header>
+
+  <!-- Main: embed Spring store -->
+  <main>
+    <iframe class="merch-frame" src="https://my-store-1098a67.creator-spring.com/" title="BenGurWaves Merch Store"></iframe>
+  </main>
+
+  <!-- Footer (exact copy) -->
+  <footer style="text-align:center; padding:20px; font-size:0.9rem; color:#aaa;">
+  ©BenGurWaves2025<br>
+  ALL RIGHTS RESERVED
+</footer>
+
+  <script>
+    // Add loaded class so the page fades in like the index does
+    window.addEventListener('load', () => {
+      document.body.classList.add('loaded');
+    });
+  </script>
+</body>
+</html>
