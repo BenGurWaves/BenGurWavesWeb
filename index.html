@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>BenGurWaves — Home</title>
 
-  <!-- Favicon: tab image -->
-  <link rel="icon" href="My-Logo-_Drawn_.svg" type="image/svg+xml" />
 
   <style>
     /* Pre-save + Listen button styles */
@@ -40,6 +38,16 @@
     }
     .nav-toggle:focus { outline: 2px solid rgba(210,184,140,0.35); border-radius:6px; }
 
+    /* the three dash lines (kept for open -> X animation) */
+    .nav-toggle .dash {
+      width:22px;
+      height:2px;
+      background:#fff;
+      display:block;
+      margin:3px 0;
+      transition: transform .25s ease, opacity .2s ease;
+    }
+
     /* NEW: plus shown when nav is CLOSED */
     .nav-toggle .plus {
       font-size: 22px;
@@ -51,16 +59,6 @@
       transition: transform .18s ease, opacity .12s ease;
       user-select: none;
       -webkit-user-select: none;
-    }
-
-    /* the three dash lines (kept for open -> X animation) */
-    .nav-toggle .dash {
-      width:22px;
-      height:2px;
-      background:#fff;
-      display:block;
-      margin:3px 0;
-      transition: transform .25s ease, opacity .2s ease;
     }
 
     /* hide dashes when nav is closed, show plus */
@@ -190,7 +188,7 @@
       margin-left: 6px;
     }
 
-    /* the small logo we'll add to the About section */
+    /* the small logo we'll add to the About section - updated to be transparent and allow SVG to render */
     .about-logo {
       width: 86px;
       height: auto;
@@ -198,12 +196,23 @@
       margin-bottom: 12px;
       -webkit-user-drag: none;
       user-select:none;
-      background: #000;             /* solid black background under the svg */
-      padding: 8px;                 /* little padding so svg doesn't touch edges */
+      background: transparent;      /* let the SVG show naturally */
+      padding: 6px;                 /* slight padding for strokes */
       border-radius: 8px;
       box-shadow: 0 8px 30px rgba(0,0,0,0.6);
       position: relative;
-      z-index: 6;                   /* make sure it sits above the about-section */
+      z-index: 6;
+    }
+
+    /* fallback PNG small panel look */
+    .about-logo-fallback {
+      width: 86px;
+      display: block;
+      margin-bottom: 12px;
+      background: #000;
+      padding: 8px;
+      border-radius: 8px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6);
     }
 
     /* close button inside popup: show a dash (–) instead of an X */
@@ -254,27 +263,15 @@
       font-size:0.9rem;
     }
 
-    /* NEW: white rounded box behind/around the footer social icons */
-    .footer-socials-wrap {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 10px auto 12px;
-      padding: 8px 12px;
-      background: rgba(255,255,255,0.98); /* white box as requested */
-      border-radius: 14px;
-      width: max-content;
-      box-shadow: 0 8px 22px rgba(0,0,0,0.12);
-    }
-    /* ensure icons contrast on white background (invert if originals are white) */
+    /* ensure icons contrast on white background */
     .footer-socials-wrap .footer-socials a img {
-      filter: invert(1) brightness(0.9);
+      filter: none; /* use original icon colors */
       display:inline-block;
       width:28px;
       height:28px;
       transition: transform .18s ease, filter .18s ease;
     }
-    .footer-socials-wrap .footer-socials a:hover img { transform: translateY(-4px); filter: invert(0.85) brightness(0.95); }
+    .footer-socials-wrap .footer-socials a:hover img { transform: translateY(-4px); }
 
     /* Small responsive helper */
     @media (max-width:860px){
@@ -522,8 +519,6 @@
       position:absolute; top:16px; right:22px; font-size:32px; line-height:1; color:#fff; cursor:pointer;
       text-shadow:0 2px 8px rgba(0,0,0,.7);
     }
-
-    /* styles.css content appended below (kept intact) */
 
     /* ================= Full Background & Body ================= */
     html {
@@ -786,9 +781,7 @@
       .content-container { padding: 20px 10px; margin: 20px auto; }
     }
 
-    /* INDEX-PAGE: override mosaic layout so gallery items use 2-column layout with aspect rules
-       This resets any earlier nth-child grid placements and enforces:
-       left column = wider (2fr) for 16:9 images; right column = narrower (1fr) for squares. */
+    /* INDEX-PAGE: override mosaic layout so gallery items use 2-column layout with aspect rules */
     .gallery-grid { display:grid; grid-template-columns: 2fr 1fr; gap:18px; align-items:start; }
     .gallery-grid .gallery-item { grid-column: auto !important; grid-row: auto !important; }
     .gallery-item.aspect-16-9 { aspect-ratio: 16 / 9; }
@@ -807,12 +800,13 @@
     <!-- Left small logo -->
     <img src="My-Logo-_Drawn_.svg" alt="BenGurWaves logo" class="logo" />
 
-    <!-- Right hamburger toggle. Shows a "+" when closed; when opened the three dashes appear and animate into an X -->
+    <!-- Right hamburger toggle.
+         When closed shows a "+"; when opened the three dashes appear and animate into an "X" -->
     <button class="nav-toggle" id="navToggle" aria-label="Open navigation" aria-expanded="false" aria-controls="popupNav">
+      <span class="dash"></span>
+      <span class="dash"></span>
+      <span class="dash"></span>
       <span class="plus">+</span>
-      <span class="dash"></span>
-      <span class="dash"></span>
-      <span class="dash"></span>
     </button>
   </header>
 
@@ -934,24 +928,24 @@
     <p class="lightbox-desc"></p>
   </div>
 
-<section class="about-section" aria-label="About BenGurWaves" style="min-height:600px; display:flex; align-items:center; justify-content:center; background:#000; position:relative; padding:60px 20px; box-sizing:border-box;">
-  <div style="max-width:1000px; width:100%; display:flex; flex-direction:row; gap:40px; align-items:center; flex-wrap:wrap;">
-    <div style="flex:1 1 320px; display:flex; flex-direction:column; justify-content:center; align-items:center;">
-      <!-- Portrait kept, plus the small drawn logo added above the portrait on solid black panel -->
-      <img src="My-Logo-_Drawn_.svg" alt="Logo" class="about-logo" />
-      <img src="portrait.jpg" alt="Ben Gur" style="width:100%; max-width:300px; border-radius:10px; box-shadow:0 14px 36px rgba(0,0,0,0.6); position: relative; z-index: 2;">
+  <!-- UPDATED About section: uses <object> for SVG with PNG fallback; portrait has onerror fallback -->
+  <section class="about-section" aria-label="About BenGurWaves" style="min-height:600px; display:flex; align-items:center; justify-content:center; background:#000; position:relative; padding:60px 20px; box-sizing:border-box;">
+    <div style="max-width:1000px; width:100%; display:flex; flex-direction:row; gap:40px; align-items:center; flex-wrap:wrap;">
+      <div style="flex:1 1 320px; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+
+        <img src="My_Logo_(Drawn).png" alt="Ben Gur" style="width:100%; max-width:300px; border-radius:10px; box-shadow:0 14px 36px rgba(0,0,0,0.6); position: relative; z-index: 2;"
+      </div>
+      <div style="flex:2 1 500px; color:#fff;">
+        <h2 style="font-family:'Chomsky', serif; font-size:2rem; margin-bottom:16px;">About BenGurWaves</h2>
+        <p style="font-family:'Times New Roman', serif; font-size:1rem; line-height:1.6; opacity:0.9; margin-bottom:12px;">
+          BenGurWaves is a pianist, composer, and storyteller. Through music, he explores emotions, memories, and the unseen threads that connect moments of life. Every composition reflects his journey — from quiet reflection to sweeping crescendos, capturing the nuances of human experience.
+        </p>
+        <p style="font-family:'Times New Roman', serif; font-size:1rem; line-height:1.6; opacity:0.9;">
+          Inspired by the subtle interplay of light and shadow, sound and silence, BenGurWaves invites listeners to step into a world where every note tells a story, and every melody is a reflection of the soul.
+        </p>
+      </div>
     </div>
-    <div style="flex:2 1 500px; color:#fff;">
-      <h2 style="font-family:'Chomsky', serif; font-size:2rem; margin-bottom:16px;">About BenGurWaves</h2>
-      <p style="font-family:'Times New Roman', serif; font-size:1rem; line-height:1.6; opacity:0.9; margin-bottom:12px;">
-        BenGurWaves is a pianist, composer, and storyteller. Through music, he explores emotions, memories, and the unseen threads that connect moments of life. Every composition reflects his journey — from quiet reflection to sweeping crescendos, capturing the nuances of human experience.
-      </p>
-      <p style="font-family:'Times New Roman', serif; font-size:1rem; line-height:1.6; opacity:0.9;">
-        Inspired by the subtle interplay of light and shadow, sound and silence, BenGurWaves invites listeners to step into a world where every note tells a story, and every melody is a reflection of the soul.
-      </p>
-    </div>
-  </div>
-</section>
+  </section>
 
  <script>
   (function(){
