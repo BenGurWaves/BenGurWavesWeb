@@ -1,0 +1,1496 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Releases | BenGurWaves</title>
+
+  <style>
+/* General layout */
+.releases-section {
+  padding: 3rem 1rem;
+  text-align: center;
+  background: #111;
+  color: #fff;
+}
+
+.releases-section h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Audio */
+.audio-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.audio-controls button {
+  padding: 0.8rem 1.2rem;
+  background: gold;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.audio-controls button:hover {
+  background: darkorange;
+}
+
+/* Video carousel */
+.video-carousel {
+  perspective: 2000px;
+  height: 500px;
+  position: relative;
+  overflow: hidden;
+}
+
+.carousel-track {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: transform 1s ease;
+}
+
+.carousel-item {
+  position: absolute;
+  width: 640px;
+  height: 360px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.carousel-item iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 10px;
+}
+
+.carousel-controls {
+  margin-top: 1rem;
+}
+.carousel-controls button {
+  background: #333;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1rem;
+  margin: 0 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.carousel-controls button:hover {
+  background: #666;
+}
+</style>
+
+  <!-- ===== ViewsAlbum Section (insert under the existing Featured section) ===== -->
+<style>
+  /* ===== ViewsAlbum styles (inline for releases.html) ===== */
+  #views-album-section {
+    min-height: 720px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: url('The_Six_Views_Background.png') no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+    padding: 48px 20px;
+    box-sizing: border-box;
+  }
+  #views-album-section > .overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.50);
+    z-index: 1;
+  }
+  .views-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 1100px;
+    width: 100%;
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    box-sizing: border-box;
+  }
+
+  /* left: album cover + title + description */
+  .views-left {
+    flex: 0 0 48%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:18px;
+  }
+  .views-cover {
+    width: 320px;
+    height: 320px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 10px 36px rgba(0,0,0,0.6);
+    background: #111;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .views-cover img {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  .views-meta h2 {
+    margin: 0;
+    font-family: 'Chomsky', serif;
+    font-size: 1.9rem;
+    color: #fff;
+    letter-spacing: .2px;
+  }
+  .views-meta .artist {
+    margin-top: 4px;
+    font-family: 'Times New Roman', serif;
+    font-size: 1.02rem;
+    color: rgba(255,255,255,0.92);
+  }
+  .views-desc {
+    margin-top: 8px;
+    color: rgba(255,255,255,0.95);
+    max-width: 520px;
+    line-height: 1.6;
+    font-family: 'Times New Roman', serif;
+    font-size: 0.98rem;
+    text-align: center;
+  }
+  .views-download {
+    margin-top: 12px;
+  }
+  .views-download a {
+    display:inline-block;
+    padding: 12px 20px;
+    border-radius: 8px;
+    background: rgba(210,184,140,0.95);
+    color: #111;
+    text-decoration: none;
+    font-weight: 700;
+    transition: background .18s ease, transform .12s ease;
+  }
+  .views-download a:hover { background: #000; color: #d2b48c; transform: translateY(-2px); }
+
+  /* right: player + playlist */
+  .views-right {
+    flex: 0 0 44%;
+    display:flex;
+    flex-direction:column;
+    gap: 14px;
+    align-items: stretch;
+    min-width: 300px;
+  }
+  .views-player {
+    background: linear-gradient(180deg, rgba(6,6,6,0.9), rgba(12,12,12,0.85));
+    padding: 16px;
+    border-radius: 10px;
+    box-shadow: 0 12px 36px rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.04);
+    display:flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .player-art {
+    width: 86px;
+    height: 86px;
+    border-radius: 6px;
+    overflow:hidden;
+    flex: 0 0 86px;
+    background: #111;
+  }
+  .player-art img {
+    width:100%;
+    height:100%;
+    object-fit: cover;
+    display:block;
+  }
+  .player-info {
+    flex: 1 1 auto;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    color: #fff;
+    min-width: 0;
+  }
+  .player-info .track-title {
+    font-weight:700;
+    font-family: 'Times New Roman', serif;
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .player-info .track-artist {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.85);
+  }
+
+  .player-controls {
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .ctrl-btn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 16px;
+  }
+  .ctrl-btn:focus { outline: 2px solid rgba(210,184,140,0.28); }
+
+  /* progress row */
+  .progress-row {
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .time {
+    width:48px;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.85);
+    text-align: center;
+    font-family: 'Times New Roman', serif;
+  }
+  .progress {
+    flex:1;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .progress input[type=range] {
+    width:100%;
+    -webkit-appearance: none;
+    background: transparent;
+  }
+  .progress input[type=range]::-webkit-slider-runnable-track {
+    height:6px; background: rgba(255,255,255,0.12); border-radius:6px;
+  }
+  .progress input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:14px; height:14px; border-radius:50%; background: #d2b48c; margin-top:-4px; }
+
+  /* playlist */
+  .views-playlist {
+    background: rgba(0,0,0,0.45);
+    padding: 12px;
+    border-radius: 10px;
+    max-height: 320px;
+    overflow:auto;
+    border: 1px solid rgba(255,255,255,0.03);
+  }
+  .track {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding: 8px 10px;
+    cursor:pointer;
+    border-radius: 8px;
+    transition: background .12s ease, transform .12s ease;
+    color: #fff;
+    font-family: 'Times New Roman', serif;
+    font-size: 0.98rem;
+  }
+  .track:hover { background: rgba(255,255,255,0.02); transform: translateY(-2px); }
+  .track.active {
+    background: linear-gradient(90deg, rgba(210,184,140,0.12), rgba(210,184,140,0.04));
+    box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+    transform: none;
+  }
+  .track .t-left { display:flex; gap:12px; align-items:center; min-width:0; }
+  .track .track-num { width:34px; text-align:center; color: rgba(255,255,255,0.75); font-size:0.9rem; }
+  .track .track-title-small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; text-align:left; }
+  .track .track-length { color: rgba(255,255,255,0.75); font-size:0.9rem; min-width:44px; text-align:right; }
+
+  /* responsive */
+  @media (max-width:920px){
+    .views-inner { flex-direction: column; align-items:center; }
+    .views-left, .views-right { flex: 1 1 100%; width:100%; }
+    .views-left { order: 1; }
+    .views-right { order: 2; }
+    .views-right { width: 92%; }
+  }
+</style>
+
+  <style>
+
+    /* Pre-save + Listen button styles */
+    .pre-save-btn, .listen-btn {
+      display:inline-block;
+      padding:12px 22px;
+      border-radius:8px;
+      background: rgba(210,184,140,0.95);
+      color:#111;
+      text-decoration:none;
+      font-weight:700;
+      transition: background .18s ease, color .18s ease, transform .12s ease;
+    }
+    .pre-save-btn:hover, .listen-btn:hover,
+    .pre-save-btn:focus, .listen-btn:focus {
+      background:#000; color:#d2b48c; transform: translateY(-2px);
+    }
+
+    /* ===== Popup Navigation (slides from RIGHT, max half viewport) ===== */
+    .nav-toggle {
+      width:44px;
+      height:36px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:none;
+      background:transparent;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+    }
+    .nav-toggle:focus { outline: 2px solid rgba(210,184,140,0.35); border-radius:6px; }
+
+    /* the three dash lines (kept for open -> X animation) */
+    .nav-toggle .dash {
+      width:22px;
+      height:2px;
+      background:#fff;
+      display:block;
+      margin:3px 0;
+      transition: transform .25s ease, opacity .2s ease;
+    }
+
+    /* NEW: plus shown when nav is CLOSED */
+    .nav-toggle .plus {
+      font-size: 22px;
+      color: #fff;
+      display: inline-block;
+      line-height: 1;
+      font-weight: 700;
+      font-family: 'Times New Roman', serif;
+      transition: transform .18s ease, opacity .12s ease;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* hide dashes when nav is closed, show plus */
+    .nav-toggle:not(.open) .dash { display: none; }
+    .nav-toggle:not(.open) .plus { display: inline-block; }
+
+    /* when open, hide plus and show & animate dashes into X */
+    .nav-toggle.open .plus { display: none; }
+    .nav-toggle.open .dash { display: block; }
+
+    .nav-toggle.open .dash:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .nav-toggle.open .dash:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-toggle.open .dash:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    .popup-nav-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+      z-index: 2500;
+    }
+    .popup-nav-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .popup-nav {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: min(50%, 420px);
+      transform: translateX(106%);
+      background: linear-gradient(180deg, rgba(6,6,6,0.96), rgba(10,10,10,0.98));
+      box-shadow: -24px 0 60px rgba(0,0,0,0.65);
+      transition: transform .32s cubic-bezier(.2,.9,.2,1);
+      z-index: 2600;
+      display:flex;
+      flex-direction:column;
+      padding: 28px 20px;
+      box-sizing: border-box;
+      gap: 18px;
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+    }
+    .popup-nav.open { transform: translateX(0); }
+
+    .popup-nav .nav-head {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .popup-nav .nav-title {
+      font-family: 'Chomsky', serif;
+      font-size: 1.25rem;
+      color: #fff;
+      letter-spacing: .2px;
+    }
+
+    .popup-nav .nav-links {
+      margin-top: 6px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+
+    .popup-nav .nav-links a {
+      display:block;
+      padding: 12px 14px;
+      color: #fff;
+      text-decoration: none;
+      font-family: 'Times New Roman', serif;
+      font-size: 1.05rem;
+      border-radius: 8px;
+      transition: background .14s ease, transform .12s ease;
+    }
+    .popup-nav .nav-links a:hover,
+    .popup-nav .nav-links a:focus {
+      background: rgba(210,184,140,0.10);
+      transform: translateX(-6px);
+      outline: none;
+    }
+
+    .popup-nav .spacer { flex:1; }
+
+    .popup-nav .social-row {
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content:center;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .popup-nav .social-row a img {
+      width:28px;
+      height:28px;
+      filter: invert(1) brightness(1);
+      display:block;
+    }
+    .popup-nav .social-row a:hover img { filter: invert(0.9) brightness(1.1); transform: translateY(-2px); }
+
+    /* header tweaks: logo left, hamburger right */
+    header.site {
+      position: relative;
+      z-index: 2;
+      display:flex;
+      align-items:center;
+      justify-content:space-between; /* logo left, toggle right */
+      padding: 10px 24px;
+      box-sizing: border-box;
+      gap: 12px;
+      min-height:56px;
+    }
+
+    /* small logo on left */
+    header .logo {
+      height: 40px;
+      width: auto;
+      display:block;
+      -webkit-user-drag: none;
+      user-select:none;
+      margin-left: 6px;
+    }
+
+    /* close button inside popup: show a dash (–) instead of an X */
+    .nav-close {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 32px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 6px 8px;
+      border-radius: 6px;
+    }
+    .nav-close:focus { outline: 2px solid rgba(210,184,140,0.32); }
+
+    /* bigger dash styling */
+    .nav-close .close-dash {
+      display:inline-block;
+      font-size: 36px;
+      transform: translateY(1px);
+      font-weight: 300;
+      font-family: serif;
+      pointer-events: none;
+    }
+
+    /* Footer social icons row */
+    .footer-socials {
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      justify-content:center;
+      align-items:center;
+      padding:12px 8px;
+    }
+    .footer-socials a img {
+      width:28px;
+      height:28px;
+      display:inline-block;
+      filter: invert(0.9) brightness(1);
+      transition: transform .18s ease, filter .18s ease;
+    }
+    .footer-socials a:hover img { transform: translateY(-4px); filter: invert(0.8) brightness(1.05); }
+
+    .footer-copyright {
+      text-align:center;
+      color:#aaa;
+      padding:6px 0 18px 0;
+      font-size:0.9rem;
+    }
+
+    /* ensure icons contrast on white background */
+    .footer-socials-wrap .footer-socials a img {
+      filter: none; /* use original icon colors */
+      display:inline-block;
+      width:28px;
+      height:28px;
+      transition: transform .18s ease, filter .18s ease;
+    }
+    .footer-socials-wrap .footer-socials a:hover img { transform: translateY(-4px); }
+
+    /* Small responsive helper */
+    @media (max-width:860px){
+      .featured-inner, .release-card { flex-direction:column; text-align:center; gap:18px; }
+      .featured-thumb, .release-thumb { width:72%; max-width:360px; }
+      .sheet-cards { width:92%; height:320px; }
+      .sheet-card { --card-w:240px; --card-h:300px; }
+      header .logo { height:36px; }
+      .popup-nav { width: 92vw; max-width: 420px; }
+      .footer-socials-wrap { padding: 6px 8px; border-radius: 10px; }
+    }
+
+    /* Releases text fallback */
+    .release-heading, .release-title, .release-description {
+      color: rgb(255,255,255);
+      transition: color 180ms linear;
+    }
+
+    .sheet-section {
+      min-height: 890px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: none;
+      position: relative;
+    }
+
+    .sheet-container {
+      max-width: 1100px;
+      width: 100%;
+      padding: 40px;
+      box-sizing: border-box;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .sheet-cards {
+      position: relative;
+      width: 760px;
+      height: 420px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap: 0;
+      pointer-events: auto;
+      overflow: visible;
+      transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
+    }
+
+    .sheet-card {
+      --card-w: 300px;
+      --card-h: 380px;
+      position: absolute;
+      width: var(--card-w);
+      height: var(--card-h);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.6);
+      transform-origin: center top;
+      transition:
+        transform 420ms cubic-bezier(.2,.9,.2,1),
+        left 420ms cubic-bezier(.2,.9,.2,1),
+        top 420ms cubic-bezier(.2,.9,.2,1),
+        filter 420ms ease;
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.03);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      will-change: transform, left, top, filter;
+    }
+
+    .sheet-card img {
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+      filter: saturate(0.98) contrast(0.98) brightness(0.98);
+      transform: scale(1.02) translateZ(0);
+      transition: transform 420ms ease, filter 420ms ease;
+      user-select:none;
+      -webkit-user-drag: none;
+    }
+
+    .sheet-card.center {
+      z-index: 30;
+      left: calc(50% - var(--card-w) / 2);
+      top: 0;
+      transform: rotate(0deg) translateY(0);
+    }
+
+    .sheet-card.left {
+      z-index: 20;
+      left: calc(50% - var(--card-w) - 36px);
+      top: 28px;
+      transform: rotate(-10deg) translateY(0);
+    }
+    .sheet-card.right {
+      z-index: 20;
+      left: calc(50% + 36px);
+      top: 28px;
+      transform: rotate(10deg) translateY(0);
+    }
+
+    .sheet-cards:hover .sheet-card.left {
+      left: calc(50% - var(--card-w) - 86px);
+      top: -6px;
+      transform: rotate(-6deg) translateY(-6px);
+    }
+    .sheet-cards:hover .sheet-card.right {
+      left: calc(50% + 86px);
+      top: -6px;
+      transform: rotate(6deg) translateY(-6px);
+    }
+
+    .sheet-cards:hover .sheet-card.center img,
+    .sheet-cards:hover .sheet-card.left img,
+    .sheet-cards:hover .sheet-card.right img {
+      transform: scale(1.03) translateZ(0);
+      filter: saturate(1.02) contrast(1.03) brightness(1);
+    }
+
+    .sheet-card:hover { transform: translateY(-8px) scale(1.01) rotate(0deg); z-index: 60; }
+    .sheet-card:hover img { transform: scale(1.04) translateZ(0); }
+
+    .sheet-label {
+      margin-top: 14px;
+      color: rgba(255,255,255,0.9);
+      font-family: 'Times New Roman', serif;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    .sheet-card a { display:block; width:100%; height:100%; text-decoration:none; color:inherit; }
+    .sheet-card:focus-within { outline: 3px solid rgba(210,184,140,0.12); }
+
+    /* ================= Full Background & Body ================= */
+    html {
+      height: 100%;
+      background: url('DSC_1391_Mono.JPG.png') no-repeat center center fixed;
+      background-size: cover;
+      background-color: black;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Times New Roman', serif;
+      color: #fff;
+      text-align: center;
+      min-height: 100%;
+      opacity: 0;
+      transition: opacity 1s ease;
+      position: relative;
+      overflow-x: hidden;
+    }
+    body.loaded {
+      opacity: 1;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('DSC_1391_Color.png') no-repeat center center fixed;
+      background-size: cover;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1s ease;
+      z-index: -1;
+    }
+    body.colorful-bg::before {
+      opacity: 1;
+    }
+
+    .content-container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 40px 20px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 8px;
+      line-height: 1.6;
+      text-align: left;
+    }
+
+    .intro-fade {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1.5s ease, transform 1.5s ease;
+      transition-delay: 2s;
+    }
+    body.loaded .intro-fade {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+  </style>
+</head>
+<body>
+  <!-- Header: logo on left, only hamburger on the RIGHT -->
+  <header class="site" role="banner">
+    <!-- Left small logo -->
+    <img src="My-Logo-_Drawn_.svg" alt="BenGurWaves logo" class="logo" />
+
+    <!-- Right hamburger toggle.
+         When closed shows a "+"; when opened the three dashes appear and animate into an "X" -->
+    <button class="nav-toggle" id="navToggle" aria-label="Open navigation" aria-expanded="false" aria-controls="popupNav">
+      <span class="dash"></span>
+      <span class="dash"></span>
+      <span class="dash"></span>
+      <span class="plus">+</span>
+    </button>
+  </header>
+
+  <!-- Popup nav backdrop + panel (slides from right) -->
+  <div class="popup-nav-backdrop" id="popupBackdrop" tabindex="-1" aria-hidden="true"></div>
+
+  <nav class="popup-nav" id="popupNav" aria-hidden="true" aria-label="Main navigation">
+    <div class="nav-head">
+      <div class="nav-title">Menu</div>
+      <!-- Close button: a dash instead of an X -->
+      <button class="nav-close" id="navCloseBtn" aria-label="Close navigation">
+        <span class="close-dash">–</span>
+      </button>
+    </div>
+
+    <div class="nav-links" role="menu">
+      <a href="index.html" role="menuitem" tabindex="-1">Home</a>
+      <a href="releases.html" role="menuitem" tabindex="-1">Releases</a>
+      <a href="merch.html" role="menuitem" tabindex="-1">Merch</a>
+      <a href="gallery.html" role="menuitem" tabindex="-1">Gallery</a>
+      <a href="me.html" role="menuitem" tabindex="-1">Me</a>
+      <a href="david.html" role="menuitem" tabindex="-1">David</a>
+    </div>
+
+    <div class="spacer" aria-hidden="true"></div>
+
+    <div class="social-row" aria-hidden="true">
+      <a href="https://youtube.com/@bengurwaves" title="YouTube"><img src="icons8-youtube-logo.svg" alt="YouTube"></a>
+      <a href="https://instagram.com/bengurwaves" title="Instagram"><img src="icons8-instagram-logo.svg" alt="Instagram"></a>
+      <a href="https://www.tiktok.com/@ben_gur_waves" title="TikTok"><img src="tiktok-48.png" alt="TikTok"></a>
+    </div>
+  </nav>
+
+  <!-- Featured Section -->
+  <section
+    class="featured-section"
+    aria-label="Featured — Finally Home"
+    style="
+      min-height: 890px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: url('Copy%20of%20Finally%20Home%20-%20The%20Album%281%29.png') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+    "
+  >
+    <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.45); z-index: 1;"></div>
+
+    <div style="position: relative; z-index: 2; max-width: 1100px; width: 100%; padding: 40px; display:flex; gap:30px; align-items:center; box-sizing:border-box;">
+      <div style="flex: 0 0 320px; display:flex; align-items:center; justify-content:center;">
+        <img src="Finally Home Thumb (Best Reso).jpg" alt="Finally Home — thumbnail" style="max-width:100%; height:auto; border-radius:8px; box-shadow: 0 6px 20px rgba(0,0,0,0.6);">
+      </div>
+      <div style="flex: 1 1 auto; color:#fff; text-align:left;">
+        <h2 style="font-family: 'Chomsky', serif; font-size: 2.4rem; margin: 0 0 6px 0;">Finally Home - The Album</h2>
+        <p style="margin: 0 0 12px 0; font-family: 'Times New Roman', serif; font-size: 1rem; opacity: 0.9;">- BenGurWaves</p>
+
+        <p style="margin-top: 6px; color: rgba(255,255,255,0.95); line-height:1.6; max-width: 700px;">
+          <strong>Finally Home</strong> is my story. Each piece, or song, is a part of who I have been.
+          Every part of the album carries my worries, fears, joys, sadness, and struggles. I wrote this album in sweat, tears, and countless late nights. This is my album… no, correction, this is me.
+        </p>
+
+        <p style="margin-top: 18px; font-weight:600;">Release Date: October 10, 2025</p>
+
+        <p style="margin-top: 18px;">
+          <a href="releases.html" class="pre-save-btn" title="Pre-save Finally Home">Pre-Save</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="views-album-section" aria-label="The Six Views Album">
+  <div class="overlay" aria-hidden="true"></div>
+
+  <div class="views-inner">
+
+    <!-- LEFT: cover, title, artist, description, download -->
+    <div class="views-left" role="region" aria-labelledby="views-title">
+      <div class="views-cover" aria-hidden="false">
+        <img src="The_Six_Views_CoverPic.png" alt="The Six Views — cover art">
+      </div>
+
+      <div class="views-meta">
+        <h2 id="views-title">The Six Views Album</h2>
+        <div class="artist">BenGurWaves</div>
+      </div>
+
+      <p class="views-desc">
+        A six-part journey through sound, memory, and color. Each “View” is a musical reflection — calm, emotional, and quietly cinematic. Let each piece reveal a different moment, a different mood. Best experienced with headphones and stillness.
+      </p>
+
+      <div class="views-download">
+        <!-- replace the href with your actual combined download file if you have one -->
+        <a href="The_Six_Views_Album.zip" title="Download The Six Views Album" download>Download Album</a>
+      </div>
+    </div>
+
+    <!-- RIGHT: player and playlist -->
+    <div class="views-right" role="region" aria-label="Album player and track list">
+
+      <!-- player -->
+      <div class="views-player" aria-live="polite">
+        <div class="player-art">
+          <img id="player-art-img" src="The_Six_Views_CoverPic.png" alt="Album art">
+        </div>
+
+        <div class="player-info">
+          <div class="track-title" id="now-title">View I - Amber Veil</div>
+          <div class="track-artist" id="now-artist">BenGurWaves</div>
+
+          <div class="player-controls" role="group" aria-label="Playback controls">
+            <button class="ctrl-btn" id="prevBtn" title="Previous track" aria-label="Previous"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 18V6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 18l8.5-6L5 6v12z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+
+            <button class="ctrl-btn" id="playBtn" title="Play/Pause" aria-label="Play"><svg id="playIcon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3v18l15-9z"/></svg><svg id="pauseIcon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M6 19h4V5H6v14zM14 5v14h4V5h-4z"/></svg></button>
+
+            <button class="ctrl-btn" id="nextBtn" title="Next track" aria-label="Next"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 6v12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 6l-8.5 6L19 18V6z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+
+          <div class="progress-row" aria-hidden="false">
+            <div class="time" id="curTime">0:00</div>
+            <div class="progress">
+              <input type="range" id="seekBar" value="0" min="0" step="0.01" aria-label="Seek">
+            </div>
+            <div class="time" id="durTime">0:00</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- playlist -->
+      <div class="views-playlist" id="playlist" aria-label="Track list">
+        <!-- JS injects the tracks here -->
+      </div>
+
+      <!-- hidden audio element used for playback -->
+      <audio id="views-audio" preload="metadata"></audio>
+    </div>
+  </div>
+</section>
+  <!-- Audio Section -->
+<section class="releases-section" id="six-views-audio">
+  <h2>Six Views (Audio)</h2>
+  <div class="audio-controls">
+    <audio id="audio-player" controls>
+      <source src="track1.mp3" type="audio/mpeg">
+      Your browser does not support audio.
+    </audio>
+    <button id="download-all">Download All Tracks</button>
+  </div>
+</section>
+
+<!-- Video Section -->
+<section class="releases-section" id="six-views-video">
+  <h2>Six Views (Video)</h2>
+  <div class="video-carousel">
+    <div class="carousel-track" id="carousel-track">
+      <div class="carousel-item"><iframe src="https://player.vimeo.com/video/1099813490"></iframe></div>
+      <div class="carousel-item"><iframe src="https://player.vimeo.com/video/1102784281"></iframe></div>
+      <div class="carousel-item"><iframe src="https://player.vimeo.com/video/1103469822"></iframe></div>
+      <div class="carousel-item"><iframe src="https://player.vimeo.com/video/1103470247"></iframe></div>
+      <div class="carousel-item"><iframe src="https://player.vimeo.com/video/1103481914"></iframe></div>
+      <div class="carousel-item"><iframe src="https://player.vimeo.com/video/1103483618"></iframe></div>
+    </div>
+  </div>
+  <div class="carousel-controls">
+    <button id="prev">◀ Prev</button>
+    <button id="next">Next ▶</button>
+  </div>
+</section>
+
+
+  <!-- Sheet Music Section -->
+  <section class="sheet-section" aria-label="Sheet Music">
+    <div class="sheet-container">
+      <div>
+        <div class="sheet-cards" tabindex="0" aria-label="Sheet music examples (click to open sheet music releases)">
+          <div class="sheet-card left" role="button">
+            <a href="releases.html#sheet-music" title="Open sheet music - left">
+              <img src="Screen%20Shot%202025-08-19%20at%204.29.10%20PM.png" alt="Sheet 1">
+            </a>
+          </div>
+
+          <div class="sheet-card center" role="button">
+            <a href="releases.html#sheet-music" title="Open sheet music - center">
+              <img src="Screen%20Shot%202025-08-19%20at%204.29.44%20PM.png" alt="Sheet 2">
+            </a>
+          </div>
+
+          <div class="sheet-card right" role="button">
+            <a href="releases.html#sheet-music" title="Open sheet music - right">
+              <img src="Screen%20Shot%202025-08-19%20at%204.30.02%20PM.png" alt="Sheet 3">
+            </a>
+          </div>
+        </div>
+
+        <div class="sheet-label">Sheet Music — hover the artwork to fan them out</div>
+      </div>
+    </div>
+  </section>
+
+  </main>
+
+  <div class="lightbox" id="lightbox">
+    <span class="lightbox-close">&times;</span>
+    <img class="lightbox-img" src="" alt="">
+    <p class="lightbox-desc"></p>
+  </div>
+
+  <script>
+  (function(){
+    // Playlist (exact filenames you uploaded)
+    const rawFiles = [
+      '01 View 1 - Amber Veil - Official Audio (MP3).mp3',
+      '02 View II - Clouded Flame - Official Audio (MP3).mp3',
+      '03 View III - Lavender Fade - Official Audio (MP3).mp3',
+      'View IV - SIlver Drift - Official Audio (MP3).mp3',
+      '05 View V - Blue Recede - Official Audio (MP3).mp3',
+      '06 View VI - Afterlight - Official Audio (MP3).mp3'
+    ];
+
+    const tracks = rawFiles.map((name, i) => {
+      return {
+        src: encodeURI(name),
+        title: name.replace(/\.(mp3|wav|m4a)$/i, '').replace(/^\d+\s*/, ''),
+        index: i
+      };
+    });
+
+    const audio = document.getElementById('views-audio');
+    const playBtn = document.getElementById('playBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const playIcon = document.getElementById('playIcon');
+    const pauseIcon = document.getElementById('pauseIcon');
+    const nowTitle = document.getElementById('now-title');
+    const nowArtist = document.getElementById('now-artist');
+    const playerArt = document.getElementById('player-art-img');
+    const seekBar = document.getElementById('seekBar');
+    const curTime = document.getElementById('curTime');
+    const durTime = document.getElementById('durTime');
+    const playlistEl = document.getElementById('playlist');
+
+    const ARTIST = 'BenGurWaves';
+    let current = 0;
+    let isPlaying = false;
+    let raf;
+
+    // Build playlist markup
+    function renderPlaylist(){
+      playlistEl.innerHTML = '';
+      tracks.forEach((t, idx) => {
+        const tr = document.createElement('div');
+        tr.className = 'track';
+        tr.setAttribute('data-index', idx);
+        tr.tabIndex = 0;
+        tr.innerHTML = `
+          <div class="t-left">
+            <div class="track-num">${(idx+1).toString().padStart(2,'0')}</div>
+            <div class="track-title-small">${escapeHtml(t.title)}</div>
+          </div>
+          <div class="track-length" aria-hidden="true">—:—</div>
+        `;
+        tr.addEventListener('click', () => { loadTrack(idx); play(); });
+        tr.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); loadTrack(idx); play(); }});
+        playlistEl.appendChild(tr);
+      });
+    }
+
+    // escape HTML for safety
+    function escapeHtml(s){ return String(s).replace(/[&<>"]/g, (c)=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+    // load track metadata and set audio src
+    function loadTrack(index){
+      if(index < 0) index = 0;
+      if(index > tracks.length -1) index = tracks.length -1;
+      current = index;
+      const t = tracks[current];
+      audio.src = t.src;
+      nowTitle.textContent = t.title;
+      nowArtist.textContent = ARTIST;
+      playerArt.src = 'The_Six_Views_CoverPic.png';
+      updateActiveInPlaylist();
+      // reset UI
+      curTime.textContent = '0:00';
+      durTime.textContent = '0:00';
+      seekBar.value = 0;
+    }
+
+    function updateActiveInPlaylist(){
+      const items = playlistEl.querySelectorAll('.track');
+      items.forEach(it => it.classList.remove('active'));
+      const active = playlistEl.querySelector('.track[data-index="'+current+'"]');
+      if(active) active.classList.add('active');
+    }
+
+    // play / pause
+    function play(){
+      audio.play();
+    }
+    function pause(){
+      audio.pause();
+    }
+
+    // toggle UI
+    playBtn.addEventListener('click', () => {
+      if(audio.paused) play(); else pause();
+    });
+
+    prevBtn.addEventListener('click', () => {
+      if(current > 0){ loadTrack(current - 1); play(); } else { loadTrack(tracks.length - 1); play(); }
+    });
+    nextBtn.addEventListener('click', () => {
+      if(current < tracks.length -1){ loadTrack(current + 1); play(); } else { loadTrack(0); play(); }
+    });
+
+    // update play/pause icons
+    audio.addEventListener('play', () => {
+      isPlaying = true;
+      playIcon.style.display = 'none';
+      pauseIcon.style.display = 'inline';
+      startRAF();
+    });
+    audio.addEventListener('pause', () => {
+      isPlaying = false;
+      playIcon.style.display = 'inline';
+      pauseIcon.style.display = 'none';
+      cancelAnimationFrame(raf);
+    });
+
+    // update duration when metadata is loaded
+    audio.addEventListener('loadedmetadata', () => {
+      seekBar.max = audio.duration;
+      durTime.textContent = formatTime(audio.duration);
+      // attempt to show individual track durations in playlist (optional)
+      const trackEl = playlistEl.querySelector('.track[data-index="'+current+'"] .track-length');
+      if(trackEl) trackEl.textContent = formatTime(audio.duration);
+    });
+
+    // progress updates
+    function updateProgress(){
+      seekBar.value = audio.currentTime;
+      curTime.textContent = formatTime(audio.currentTime);
+      raf = requestAnimationFrame(updateProgress);
+    }
+    function startRAF(){
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(updateProgress);
+    }
+
+    // seek bar control
+    let isSeeking = false;
+    seekBar.addEventListener('input', () => {
+      curTime.textContent = formatTime(seekBar.value);
+      if(!isSeeking && !audio.paused) { /* show preview while dragging */ }
+    });
+    seekBar.addEventListener('change', () => {
+      audio.currentTime = parseFloat(seekBar.value);
+      if(!audio.paused) startRAF();
+    });
+
+    // auto next on ended
+    audio.addEventListener('ended', () => {
+      if(current < tracks.length -1){ loadTrack(current + 1); play(); } else { loadTrack(0); /* don't auto-play first track unless desired */ }
+    });
+
+    // click playlist to load durations for each track (optional small preloads)
+    function tryLoadTrackDurations(){
+      // load metadata for each (one at a time to avoid hammering)
+      let i = 0;
+      function next(){
+        if(i >= tracks.length) return;
+        const temp = new Audio();
+        temp.src = tracks[i].src;
+        temp.preload = 'metadata';
+        temp.addEventListener('loadedmetadata', () => {
+          const el = playlistEl.querySelector('.track[data-index="'+i+'"] .track-length');
+          if(el) el.textContent = formatTime(temp.duration);
+          temp.src = '';
+          i++;
+          // small delay between loads
+          setTimeout(next, 180);
+        });
+        temp.addEventListener('error', () => { i++; setTimeout(next, 180); });
+      }
+      next();
+    }
+
+    // format seconds to M:SS
+    function formatTime(s){
+      if(isNaN(s) || !isFinite(s)) return '0:00';
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60).toString().padStart(2,'0');
+      return `${m}:${sec}`;
+    }
+
+    // keyboard shortcuts on player for space = play/pause, left/right = seek
+    document.addEventListener('keydown', (e) => {
+      if(document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) return;
+      if(e.code === 'Space'){ e.preventDefault(); if(audio.paused) play(); else pause(); }
+      if(e.code === 'ArrowRight'){ audio.currentTime = Math.min(audio.duration || Infinity, (audio.currentTime || 0) + 5); }
+      if(e.code === 'ArrowLeft'){ audio.currentTime = Math.max(0, (audio.currentTime || 0) - 5); }
+    });
+
+    // initial render & load first track
+    renderPlaylist();
+    loadTrack(0);
+    tryLoadTrackDurations();
+
+    // helper: update active classes after loadTrack called externally
+    updateActiveInPlaylist();
+  })();
+</script>
+  
+  <script>
+// --- Audio sequential download ---
+const downloadBtn = document.getElementById("download-all");
+downloadBtn.addEventListener("click", () => {
+  const tracks = [
+    "track1.mp3","track2.mp3","track3.mp3",
+    "track4.mp3","track5.mp3","track6.mp3"
+  ];
+  let i = 0;
+  function triggerDownload(url) {
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = url;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+  function next() {
+    if (i < tracks.length) {
+      triggerDownload(tracks[i]);
+      i++;
+      setTimeout(next, 1200); // space out downloads
+    }
+  }
+  next();
+});
+
+// --- 3D Carousel ---
+const track = document.getElementById("carousel-track");
+const items = document.querySelectorAll(".carousel-item");
+const itemCount = items.length;
+let angle = 0;
+const radius = 800;
+let currentIndex = 0;
+let autoCenterTimeout;
+
+function updateCarousel() {
+  items.forEach((item, i) => {
+    const theta = (2 * Math.PI / itemCount) * (i - currentIndex);
+    const x = radius * Math.sin(theta);
+    const z = radius * Math.cos(theta);
+    item.style.transform = `translateX(${x}px) translateZ(${z}px) translate(-50%, -50%)`;
+    item.style.opacity = i === currentIndex ? "1" : "0.5";
+  });
+}
+
+function goTo(index) {
+  currentIndex = (index + itemCount) % itemCount;
+  updateCarousel();
+}
+
+document.getElementById("prev").addEventListener("click", () => goTo(currentIndex - 1));
+document.getElementById("next").addEventListener("click", () => goTo(currentIndex + 1));
+
+// Mouse scroll
+track.addEventListener("wheel", e => {
+  if (e.deltaY > 0) goTo(currentIndex + 1);
+  else goTo(currentIndex - 1);
+  resetAutoCenter();
+});
+
+// Touch swipe
+let startX = 0;
+track.addEventListener("touchstart", e => startX = e.touches[0].clientX);
+track.addEventListener("touchend", e => {
+  const endX = e.changedTouches[0].clientX;
+  if (endX - startX > 50) goTo(currentIndex - 1);
+  else if (startX - endX > 50) goTo(currentIndex + 1);
+  resetAutoCenter();
+});
+
+// Auto-center
+function resetAutoCenter() {
+  clearTimeout(autoCenterTimeout);
+  autoCenterTimeout = setTimeout(() => updateCarousel(), 1500);
+}
+
+// Initialize
+updateCarousel();
+</script>
+
+
+ <script>
+  (function(){
+    const items = document.querySelectorAll('.gallery-item');
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = document.querySelector('.lightbox-img');
+    const lbDesc = document.querySelector('.lightbox-desc');
+    const lbClose = document.querySelector('.lightbox-close');
+
+    items.forEach(item => {
+      const img = item.querySelector('img');
+      const bw = item.getAttribute('data-bw') || img.getAttribute('src');
+      const color = item.getAttribute('data-color') || bw;
+      const id = item.getAttribute('data-id') || 'top';
+
+      if (color) {
+        const p = new Image();
+        p.src = color;
+      }
+
+      item.addEventListener('click', () => {
+        window.location.href = `gallery.html#${encodeURIComponent(id)}`;
+      });
+    });
+
+    if(lbClose){
+      lbClose.addEventListener('click', () => lightbox.classList.remove('active'));
+      lightbox.addEventListener('click', (e) => { if(e.target === lightbox) lightbox.classList.remove('active'); });
+    }
+  })();
+
+    window.addEventListener("load", () => {
+      document.body.classList.add("loaded");
+      requestAnimationFrame(updateReleaseTextColors);
+    });
+
+    const releaseHeading = document.querySelector('.release-heading');
+    const releaseTitle = document.querySelector('.release-title');
+    const releaseDesc = document.querySelector('.release-description');
+
+    function lerp(a,b,t){ return a + (b-a)*t; }
+    function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+    function rgbToStr(r,g,b){ return 'rgb(' + Math.round(r) + ',' + Math.round(b) + ',' + Math.round(b) + ')'; }
+
+    function rgbToStr(r,g,b){ return 'rgb(' + Math.round(r) + ',' + Math.round(g) + ',' + Math.round(b) + ')'; }
+
+    function colorFromProgress(p){
+      p = clamp(p,0,1);
+      if (p <= 0.5){
+        const t = p / 0.5;
+        const r = lerp(255,181,t), g = lerp(255,181,t), b = lerp(255,181,t);
+        return rgbToStr(r,g,b);
+      } else {
+        const t = (p - 0.5) / 0.5;
+        const r = lerp(181,0,t), g = lerp(181,0,t), b = lerp(181,0,t);
+        return rgbToStr(r,g,b);
+      }
+    }
+
+    function updateReleaseTextColors(){
+      if(!releaseTitle && !releaseDesc && !releaseHeading) return;
+      const triggerY = window.innerHeight / 3;
+
+      if (releaseHeading){
+        const rectH = releaseHeading.getBoundingClientRect();
+        const startH = triggerY + 260;
+        const endH   = triggerY - 20;
+        const pH = clamp((startH - rectH.top) / (startH - endH), 0, 1);
+        releaseHeading.style.color = colorFromProgress(pH);
+      }
+
+      if (releaseTitle){
+        const rectT = releaseTitle.getBoundingClientRect();
+        const startT = triggerY + 200;
+        const endT   = triggerY - 50;
+        const pT = clamp((startT - rectT.top) / (startT - endT), 0, 1);
+        releaseTitle.style.color = colorFromProgress(pT);
+      }
+
+      if (releaseDesc){
+        const rectD = releaseDesc.getBoundingClientRect();
+        const startD = triggerY + 60;
+        const endD   = triggerY - 200;
+        const pD = clamp((startD - rectD.top) / (startD - endD), 0, 1);
+        releaseDesc.style.color = colorFromProgress(pD);
+      }
+    }
+
+    let ticking = false;
+    function onScrollRAF(){
+      if(!ticking){
+        requestAnimationFrame(() => {
+          updateReleaseTextColors();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+    window.addEventListener('scroll', onScrollRAF);
+    window.addEventListener('resize', onScrollRAF);
+
+    setTimeout(() => requestAnimationFrame(updateReleaseTextColors), 300);
+    setTimeout(() => requestAnimationFrame(updateReleaseTextColors), 1100);
+
+    const sheetCards = document.querySelector('.sheet-cards');
+    sheetCards && sheetCards.addEventListener('focus', () => sheetCards.classList.add('focused'));
+    sheetCards && sheetCards.classList.add('focused')
+    sheetCards && sheetCards.addEventListener('blur', () => sheetCards.classList.remove('focused'));
+    sheetCards && sheetCards.addEventListener('touchstart', () => sheetCards.classList.add('touched'), {passive:true});
+    sheetCards && sheetCards.addEventListener('touchend', () => setTimeout(()=> sheetCards && sheetCards.classList.remove('touched'), 350));
+  </script>
+
+  <!-- Popup nav script (slides from right) -->
+  <script>
+    (function(){
+      const navToggle = document.getElementById('navToggle');
+      const popup = document.getElementById('popupNav');
+      const backdrop = document.getElementById('popupBackdrop');
+      const navCloseBtn = document.getElementById('navCloseBtn');
+      const links = Array.from(popup.querySelectorAll('.nav-links a'));
+
+      function openNav() {
+        popup.classList.add('open');
+        backdrop.classList.add('active');
+        navToggle.classList.add('open');
+        navToggle.setAttribute('aria-expanded', 'true');
+        popup.setAttribute('aria-hidden', 'false');
+        backdrop.setAttribute('aria-hidden', 'false');
+        // focus first link after animation
+        setTimeout(()=> links[0] && links[0].focus(), 160);
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeNav() {
+        popup.classList.remove('open');
+        backdrop.classList.remove('active');
+        navToggle.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+        popup.setAttribute('aria-hidden', 'true');
+        backdrop.setAttribute('aria-hidden', 'true');
+        navToggle.focus();
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+      }
+
+      navToggle.addEventListener('click', (e) => {
+        const isOpen = popup.classList.contains('open');
+        if(isOpen) closeNav(); else openNav();
+      });
+
+      navCloseBtn && navCloseBtn.addEventListener('click', closeNav);
+      backdrop && backdrop.addEventListener('click', closeNav);
+
+      // close on escape
+      document.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape' && popup.classList.contains('open')) {
+          closeNav();
+        }
+      });
+
+      // simple focus trap: cycle within links + close button
+      popup.addEventListener('keydown', (e) => {
+        if(e.key !== 'Tab') return;
+        const focusable = [ ...links, navCloseBtn ];
+        const idx = focusable.indexOf(document.activeElement);
+        if(e.shiftKey && idx === 0) {
+          e.preventDefault();
+          focusable[focusable.length-1].focus();
+        } else if(!e.shiftKey && idx === focusable.length -1) {
+          e.preventDefault();
+          focusable[0].focus();
+        }
+      });
+
+      function setLinkTabindex(open){
+        links.forEach(a => a.tabIndex = open ? 0 : -1);
+      }
+      setLinkTabindex(false);
+      const obs = new MutationObserver(()=> setLinkTabindex(popup.classList.contains('open')));
+      obs.observe(popup, { attributes: true, attributeFilter: ['class'] });
+    })();
+  </script>
+
+  <!-- Footer: social icons (first line), then copyright (second line) -->
+  <footer style="padding:12px 10px 28px 10px; background:#000;">
+   <div class="footer-copyright">
+      ©BenGurWaves2025
+    </div>
+    
+    <!-- Wrapped the existing footer-socials in a white rounded "pill" -->
+    <div class="footer-socials-wrap" aria-hidden="false" title="Social links background">
+      <div class="footer-socials" aria-label="Social links">
+        <a href="https://www.youtube.com/@bengurwaves" target="_blank" rel="noopener"><img src="icons8-youtube-logo.svg" alt="YouTube"></a>
+        <a href="https://www.instagram.com/bengurwaves/" target="_blank" rel="noopener"><img src="icons8-instagram-logo.svg" alt="Instagram"></a>
+        <a href="https://www.tiktok.com/@ben_gur_waves" target="_blank" rel="noopener"><img src="tiktok-48.png" alt="TikTok"></a>
+        <a href="http://rumble.com/bengurwaves" target="_blank" rel="noopener"><img src="icons8-rumble-100.png" alt="Rumble"></a>
+        <a href="https://vimeo.com/bengurwaves" target="_blank" rel="noopener"><img src="icons8-vimeo.svg" alt="Vimeo"></a>
+        <a href="https://my-store-1098a67.creator-spring.com/" target="_blank" rel="noopener"><img src="icons8-shirt-100.png" alt="Merch"></a>
+        <a href="https://www.threads.com/@bengurwaves" target="_blank" rel="noopener"><img src="threads-white-icon.svg" alt="Threads"></a>
+        <a href="https://www.facebook.com/BenGurWaves/" target="_blank" rel="noopener"><img src="icons8-facebook.svg" alt="Facebook"></a>
+        <a href="https://www.soundcloud.com/bengurwaves" target="_blank" rel="noopener"><img src="icons8-soundcloud-logo.svg" alt="SoundCloud"></a>
+        <a href="https://bengurwaves.bandcamp.com/" target="_blank" rel="noopener"><img src="icons8-bandcamp.svg" alt="Bandcamp"></a>
+      </div>
+    </div>
+
+    
+  </footer>
+
+</body>
+</html>
