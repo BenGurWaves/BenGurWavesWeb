@@ -24,12 +24,49 @@
       background:#000; color:#d2b48c; transform: translateY(-2px);
     }
 
+     /* Footer social icons row */
+    .footer-socials {
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      justify-content:center;
+      align-items:center;
+      padding:12px 8px;
+    }
+    .footer-socials a img {
+      width:28px;
+      height:28px;
+      display:inline-block;
+      filter: invert(0.9) brightness(1);
+      transition: transform .18s ease, filter .18s ease;
+    }
+    .footer-socials a:hover img { transform: translateY(-4px); filter: invert(0.8) brightness(1.05); }
+
+    .footer-copyright {
+      text-align:center;
+      color:#aaa;
+      padding:6px 0 18px 0;
+      font-size:0.9rem;
+    }
+
+    /* ensure icons contrast on white background */
+    .footer-socials-wrap .footer-socials a img {
+      filter: none; /* use original icon colors */
+      display:inline-block;
+      width:28px;
+      height:28px;
+      transition: transform .18s ease, filter .18s ease;
+    }
+    .footer-socials-wrap .footer-socials a:hover img { transform: translateY(-4px); }
+    
     /* Small responsive helper */
     @media (max-width:860px){
       .featured-inner, .release-card { flex-direction:column; text-align:center; gap:18px; }
       .featured-thumb, .release-thumb { width:72%; max-width:360px; }
       .sheet-cards { width:92%; height:320px; }
       .sheet-card { --card-w:240px; --card-h:300px; }
+      /* make the social pill shrink on small screens if needed */
+      .footer-socials-wrap { padding: 6px 8px; border-radius: 10px; }
     }
 
     /* Releases text fallback */
@@ -273,7 +310,7 @@
     /* ================= Full Background & Body ================= */
     html {
       height: 100%;
-      background: url('DSC_1391_Mono.JPG.png') no-repeat center center fixed;
+      background: url('DavidHeroBak.mp4') no-repeat center center fixed;
       background-size: cover;
       background-color: black;
     }
@@ -601,7 +638,8 @@
       position: relative;
       padding: 56px 20px;
       box-sizing: border-box;
-      background: linear-gradient(0deg, rgba(0,0,0,0.55), rgba(0,0,0,0.55));
+      /* changed to be slightly more transparent per request */
+      background: linear-gradient(0deg, rgba(0,0,0,0.28), rgba(0,0,0,0.28));
     }
 
     /* Ensure the layout is balanced and centered */
@@ -728,13 +766,47 @@
       #about-section .about-right { flex: 0 0 auto !important; padding: 12px !important; }
       #about-section .about-right img { max-width: 320px !important; }
     }
+
+    /* --- ADDITION: soft LED glow wrapper for DAVIDPRO.png --- */
+    /* Minimal additions so nothing else is altered */
+    .profile-wrap {
+      position: relative;
+      display: inline-block;
+      border-radius: 14px;
+      z-index: 2;
+    }
+    .profile-wrap::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: calc(100% + 36px);
+      height: calc(100% + 36px);
+      border-radius: 18px;
+      pointer-events: none;
+      z-index: 1;
+      background: radial-gradient(60% 60% at 50% 50%, rgba(210,184,140,0.20), rgba(210,184,140,0.10) 35%, rgba(210,184,140,0.03) 60%, transparent 70%);
+      filter: blur(18px);
+      opacity: 0.95;
+      transition: opacity .35s ease, transform .35s ease;
+    }
+    .profile-wrap:hover::before,
+    .profile-wrap:focus-within::before {
+      transform: translate(-50%, -50%) scale(1.02);
+      opacity: 1;
+      filter: blur(20px);
+    }
+
+    /* ================= END added glow styles ================= */
+
   </style>
 </head>
 <body>
   <!-- Header (exact copy from index.html) -->
   <header class="site">
     <nav class="links-left">
-      <a href="index.html">Home</a>
+      <a href="https://bengurwaves.com">Home</a>
       <a href="releases.html">Releases</a>
       <a href="merch.html">Merch</a>
       <a href="gallery.html">Gallery</a>
@@ -786,7 +858,10 @@
     </div>
 
     <div class="about-right">
-      <img src="DAVIDPRO.png" alt="David Ivanyuk profile picture" loading="lazy" width="360" height="360">
+      <!-- WRAPPED the image so a soft glow can be applied without touching other img styles -->
+      <div class="profile-wrap" aria-hidden="false" tabindex="0">
+        <img src="DAVIDPRO.png" alt="David Ivanyuk profile picture" loading="lazy" width="360" height="360">
+      </div>
     </div>
   </section>
 
@@ -801,11 +876,35 @@
     </div>
   </section>
 
-  <!-- Footer (exact copy from index.html) -->
-  <footer style="text-align:center; padding:20px; font-size:0.9rem; color:#aaa;">
-    ©BenGurWaves2025<br>
-    ALL RIGHTS RESERVED
+  <!-- Footer: social icons (first line), then copyright (second line) -->
+  <footer style="padding:12px 10px 28px 10px; background:#000;">
+   <div class="footer-copyright">
+      ©BenGurWaves2025
+    </div>
+    
+    <!-- Wrapped the existing footer-socials in a white rounded "pill" -->
+    <div class="footer-socials-wrap" aria-hidden="false" title="Social links background">
+      <div class="footer-socials" aria-label="Social links">
+        <a href="https://www.youtube.com/@bengurwaves" target="_blank" rel="noopener"><img src="icons8-youtube-logo.svg" alt="YouTube"></a>
+        <a href="https://www.instagram.com/bengurwaves/" target="_blank" rel="noopener"><img src="icons8-instagram-logo.svg" alt="Instagram"></a>
+        <a href="https://www.tiktok.com/@ben_gur_waves" target="_blank" rel="noopener"><img src="tiktok-48.png" alt="TikTok"></a>
+        <a href="http://rumble.com/bengurwaves" target="_blank" rel="noopener"><img src="icons8-rumble-100.png" alt="Rumble"></a>
+        <a href="https://vimeo.com/bengurwaves" target="_blank" rel="noopener"><img src="icons8-vimeo.svg" alt="Vimeo"></a>
+        <a href="https://my-store-1098a67.creator-spring.com/" target="_blank" rel="noopener"><img src="icons8-shirt-100.png" alt="Merch"></a>
+        <a href="https://www.threads.com/@bengurwaves" target="_blank" rel="noopener"><img src="threads-white-icon.svg" alt="Threads"></a>
+        <a href="https://www.facebook.com/BenGurWaves/" target="_blank" rel="noopener"><img src="icons8-facebook.svg" alt="Facebook"></a>
+        <a href="https://www.soundcloud.com/bengurwaves" target="_blank" rel="noopener"><img src="icons8-soundcloud-logo.svg" alt="SoundCloud"></a>
+        <a href="https://bengurwaves.bandcamp.com/" target="_blank" rel="noopener"><img src="icons8-bandcamp.svg" alt="Bandcamp"></a>
+      </div>
+    </div>
+
+    
   </footer>
+
+  <!-- ADD: background video element (can't use mp4 as CSS background reliably) -->
+  <video id="bg-video" autoplay muted loop playsinline preload="auto" style="position:fixed; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2; pointer-events:none;" poster="DSC_1391_Color.png">
+    <source src="DavidHeroBak.mp4" type="video/mp4">
+  </video>
 
   <script>
     /* body fade-in */
