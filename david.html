@@ -6,23 +6,6 @@
   <title>David | BenGurWaves</title>
 
   <style>
-    /* --- entire styles from index.html (kept intact) --- */
-
-    /* Pre-save + Listen button styles */
-    .pre-save-btn, .listen-btn {
-      display:inline-block;
-      padding:12px 22px;
-      border-radius:8px;
-      background: rgba(210,184,140,0.95);
-      color:#111;
-      text-decoration:none;
-      font-weight:700;
-      transition: background .18s ease, color .18s ease, transform .12s ease;
-    }
-    .pre-save-btn:hover, .listen-btn:hover,
-    .pre-save-btn:focus, .listen-btn:focus {
-      background:#000; color:#d2b48c; transform: translateY(-2px);
-    }
 
      /* Footer social icons row */
     .footer-socials {
@@ -61,10 +44,6 @@
     
     /* Small responsive helper */
     @media (max-width:860px){
-      .featured-inner, .release-card { flex-direction:column; text-align:center; gap:18px; }
-      .featured-thumb, .release-thumb { width:72%; max-width:360px; }
-      .sheet-cards { width:92%; height:320px; }
-      .sheet-card { --card-w:240px; --card-h:300px; }
       /* make the social pill shrink on small screens if needed */
       .footer-socials-wrap { padding: 6px 8px; border-radius: 10px; }
     }
@@ -75,237 +54,6 @@
       transition: color 180ms linear;
     }
 
-    .sheet-section {
-      min-height: 890px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background: none;
-      position: relative;
-    }
-
-    .sheet-container {
-      max-width: 1100px;
-      width: 100%;
-      padding: 40px;
-      box-sizing: border-box;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-    }
-
-    .sheet-cards {
-      position: relative;
-      width: 760px;
-      height: 420px;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      gap: 0;
-      pointer-events: auto;
-      overflow: visible;
-      transform-style: preserve-3d;
-      -webkit-transform-style: preserve-3d;
-    }
-
-    .sheet-card {
-      --card-w: 300px;
-      --card-h: 380px;
-      position: absolute;
-      width: var(--card-w);
-      height: var(--card-h);
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 18px 40px rgba(0,0,0,0.6);
-      transform-origin: center top;
-      transition:
-        transform 420ms cubic-bezier(.2,.9,.2,1),
-        left 420ms cubic-bezier(.2,.9,.2,1),
-        top 420ms cubic-bezier(.2,.9,.2,1),
-        filter 420ms ease;
-      background: #111;
-      border: 1px solid rgba(255,255,255,0.03);
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      will-change: transform, left, top, filter;
-    }
-
-    .sheet-card img {
-      width:100%;
-      height:100%;
-      object-fit: cover;
-      display:block;
-      filter: saturate(0.98) contrast(0.98) brightness(0.98);
-      transform: scale(1.02) translateZ(0);
-      transition: transform 420ms ease, filter 420ms ease;
-      user-select:none;
-      -webkit-user-drag: none;
-    }
-
-    .sheet-card.center {
-      z-index: 30;
-      left: calc(50% - var(--card-w) / 2);
-      top: 0;
-      transform: rotate(0deg) translateY(0);
-    }
-
-    .sheet-card.left {
-      z-index: 20;
-      left: calc(50% - var(--card-w) - 36px);
-      top: 28px;
-      transform: rotate(-10deg) translateY(0);
-    }
-    .sheet-card.right {
-      z-index: 20;
-      left: calc(50% + 36px);
-      top: 28px;
-      transform: rotate(10deg) translateY(0);
-    }
-
-    .sheet-cards:hover .sheet-card.left {
-      left: calc(50% - var(--card-w) - 86px);
-      top: -6px;
-      transform: rotate(-6deg) translateY(-6px);
-    }
-    .sheet-cards:hover .sheet-card.right {
-      left: calc(50% + 86px);
-      top: -6px;
-      transform: rotate(6deg) translateY(-6px);
-    }
-
-    .sheet-cards:hover .sheet-card.center img,
-    .sheet-cards:hover .sheet-card.left img,
-    .sheet-cards:hover .sheet-card.right img {
-      transform: scale(1.03) translateZ(0);
-      filter: saturate(1.02) contrast(1.03) brightness(1);
-    }
-
-    .sheet-card:hover { transform: translateY(-8px) scale(1.01) rotate(0deg); z-index: 60; }
-    .sheet-card:hover img { transform: scale(1.04) translateZ(0); }
-
-    .sheet-label {
-      margin-top: 14px;
-      color: rgba(255,255,255,0.9);
-      font-family: 'Times New Roman', serif;
-      font-size: 0.95rem;
-      text-align: center;
-    }
-
-    .sheet-card a { display:block; width:100%; height:100%; text-decoration:none; color:inherit; }
-    .sheet-card:focus-within { outline: 3px solid rgba(210,184,140,0.12); }
-
-    .gallery-section{
-      min-height: 890px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      position:relative;
-      background:#0d0d0d;
-    }
-    .gallery-section::before{
-      content:"";
-      position:absolute; inset:0;
-      background: radial-gradient(1200px 600px at 20% 10%, rgba(255,255,255,0.04), transparent 60%),
-                  radial-gradient(900px 500px at 80% 90%, rgba(255,255,255,0.03), transparent 60%);
-      pointer-events:none;
-    }
-    .gallery-inner{
-      position:relative; z-index:2;
-      max-width:1100px; width:100%; padding:40px; box-sizing:border-box;
-    }
-    .gallery-title{
-      margin:0 0 18px 0; text-align:center;
-      color:#fff; font-family:'Chomsky', serif; font-size:2rem; letter-spacing:.3px;
-    }
-
-    /* original grid (kept for fallback) */
-    .gallery-grid{
-      display:grid;
-      grid-template-columns:repeat(12, 1fr);
-      grid-auto-rows:160px;
-      gap:18px;
-      width:100%;
-      user-select:none;
-    }
-
-    .gallery-item{
-      position:relative; overflow:hidden; border-radius:10px;
-      box-shadow:0 16px 38px rgba(0,0,0,0.55);
-      transform:rotate(var(--rot, 0deg));
-      transition: transform .35s ease;
-      cursor:pointer;
-      isolation:isolate;
-      transform-origin:center;
-      will-change: transform;
-      -webkit-transform-style: preserve-3d;
-      transform-style: preserve-3d;
-    }
-    .gallery-item:hover{ transform: rotate(var(--rot, 0deg)) scale(1.01); z-index:3; }
-
-    .gallery-item img{
-      position:absolute; inset:0;
-      width:100%; height:100%; object-fit:cover;
-      filter: grayscale(1) contrast(1.05) brightness(0.92);
-      transition: transform .4s ease, filter .35s ease, opacity .25s ease;
-      will-change: transform, filter, opacity;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      transform: translateZ(0);
-      user-select:none;
-    }
-    .gallery-item:hover img{ filter:none; transform:scale(1.03); }
-    .gallery-item::after{
-      content: attr(data-desc);
-      position:absolute; left:12px; bottom:12px;
-      color:rgba(255,255,255,0.95);
-      font-family:'Times New Roman', serif; font-size:.92rem;
-      text-shadow:0 2px 10px rgba(0,0,0,.55);
-      pointer-events:none;
-    }
-
-    /* previously set mosaic rules removed/overridden later with the index-specific override */
-
-    .gallery-actions{ display:flex; justify-content:center; margin-top:22px; }
-    .gallery-btn{
-      display:inline-block; padding:12px 22px; border-radius:8px;
-      background: rgba(210,184,140,0.95); color:#111; text-decoration:none; font-weight:700;
-      transition: background .18s ease, color .18s ease, transform .12s ease;
-    }
-    .gallery-btn:hover, .gallery-btn:focus{ background:#000; color:#d2b48c; transform: translateY(-2px); }
-
-    @media (max-width: 980px){
-      .gallery-grid{ grid-template-columns: repeat(8, 1fr); grid-auto-rows:140px; }
-      .gallery-item:nth-child(1){ grid-column:1 / span 5; grid-row:1 / span 2; }
-      .gallery-item:nth-child(2){ grid-column:6 / span 3; grid-row:1 / span 1; }
-      .gallery-item:nth-child(3){ grid-column:5 / span 4; grid-row:2 / span 2; }
-      .gallery-item:nth-child(4){ grid-column:1 / span 5; grid-row:3 / span 1; }
-    }
-    @media (max-width: 640px){
-      .gallery-grid{ grid-template-columns: repeat(6, 1fr); grid-auto-rows:120px; gap:14px; }
-      .gallery-item:nth-child(1){ grid-column:1 / span 6; grid-row:1 / span 2; }
-      .gallery-item:nth-child(2){ grid-column:1 / span 3; grid-row:3 / span 1; }
-      .gallery-item:nth-child(3){ grid-column:4 / span 3; grid-row:3 / span 2; }
-      .gallery-item:nth-child(4){ grid-column:1 / span 6; grid-row:5 / span 1; }
-    }
-
-    .lightbox{
-      position:fixed; inset:0; display:none; align-items:center; justify-content:center;
-      background:rgba(0,0,0,.78); z-index:2000; padding:24px;
-    }
-    .lightbox.active{ display:flex; }
-    .lightbox-img{
-      max-width:90vw; max-height:80vh; border-radius:10px;
-      box-shadow:0 20px 60px rgba(0,0,0,.7);
-    }
-    .lightbox-desc{
-      margin-top:12px; color:#fff; text-align:center; font-family:'Times New Roman', serif;
-    }
-    .lightbox-close{
-      position:absolute; top:16px; right:22px; font-size:32px; line-height:1; color:#fff; cursor:pointer;
-      text-shadow:0 2px 8px rgba(0,0,0,.7);
-    }
-
-    /* styles.css content appended below (kept intact) */
 
     /* ================= Full Background & Body ================= */
     html {
@@ -349,48 +97,192 @@
       opacity: 1;
     }
 
-    header.site {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 40px;
-      width: 100%;
+    /* ===== Popup Navigation (slides from RIGHT, max half viewport) ===== */
+    .nav-toggle {
+      width:44px;
+      height:36px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:none;
+      background:transparent;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+    }
+    .nav-toggle:focus { outline: 2px solid rgba(210,184,140,0.35); border-radius:6px; }
+
+    /* the three dash lines (kept for open -> X animation) */
+    .nav-toggle .dash {
+      width:22px;
+      height:2px;
+      background:#fff;
+      display:block;
+      margin:3px 0;
+      transition: transform .25s ease, opacity .2s ease;
+    }
+
+    /* NEW: plus shown when nav is CLOSED */
+    .nav-toggle .plus {
+      font-size: 22px;
+      color: #fff;
+      display: inline-block;
+      line-height: 1;
+      font-weight: 700;
+      font-family: 'Times New Roman', serif;
+      transition: transform .18s ease, opacity .12s ease;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* hide dashes when nav is closed, show plus */
+    .nav-toggle:not(.open) .dash { display: none; }
+    .nav-toggle:not(.open) .plus { display: inline-block; }
+
+    /* when open, hide plus and show & animate dashes into X */
+    .nav-toggle.open .plus { display: none; }
+    .nav-toggle.open .dash { display: block; }
+
+    .nav-toggle.open .dash:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .nav-toggle.open .dash:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-toggle.open .dash:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    .popup-nav-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+      z-index: 2500;
+    }
+    .popup-nav-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .popup-nav {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: min(50%, 420px);
+      transform: translateX(106%);
+      background: linear-gradient(180deg, rgba(6,6,6,0.96), rgba(10,10,10,0.98));
+      box-shadow: -24px 0 60px rgba(0,0,0,0.65);
+      transition: transform .32s cubic-bezier(.2,.9,.2,1);
+      z-index: 2600;
+      display:flex;
+      flex-direction:column;
+      padding: 28px 20px;
       box-sizing: border-box;
+      gap: 18px;
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+    }
+    .popup-nav.open { transform: translateX(0); }
+
+    .popup-nav .nav-head {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
     }
 
-    header nav.links-left {
-      display: flex;
-      gap: 20px;
-    }
-    header nav.links-left a {
-      color: #fff;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    header nav.links-left a:hover {
-      color: #d2b48c;
-    }
-
-    header .brand {
+    .popup-nav .nav-title {
       font-family: 'Chomsky', serif;
-      font-size: 2rem;
+      font-size: 1.25rem;
       color: #fff;
-      text-decoration: none;
-      transition: opacity 0.3s ease;
+      letter-spacing: .2px;
     }
 
-    header nav.links-right {
-      display: flex;
-      gap: 15px;
+    .popup-nav .nav-links {
+      margin-top: 6px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
     }
-    header nav.links-right a img {
-      width: 24px;
-      height: 24px;
-      vertical-align: middle;
-      filter: brightness(1) invert(1);
+
+    .popup-nav .nav-links a {
+      display:block;
+      padding: 12px 14px;
+      color: #fff;
+      text-decoration: none;
+      font-family: 'Times New Roman', serif;
+      font-size: 1.05rem;
+      border-radius: 8px;
+      transition: background .14s ease, transform .12s ease;
     }
-    header nav.links-right a:hover img {
-      filter: brightness(1) invert(0.7);
+    .popup-nav .nav-links a:hover,
+    .popup-nav .nav-links a:focus {
+      background: rgba(210,184,140,0.10);
+      transform: translateX(-6px);
+      outline: none;
+    }
+
+    .popup-nav .spacer { flex:1; }
+
+    .popup-nav .social-row {
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content:center;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .popup-nav .social-row a img {
+      width:28px;
+      height:28px;
+      filter: invert(1) brightness(1);
+      display:block;
+    }
+    .popup-nav .social-row a:hover img { filter: invert(0.9) brightness(1.1); transform: translateY(-2px); }
+
+    /* header tweaks: logo left, hamburger right */
+    header.site {
+      position: relative;
+      z-index: 2;
+      display:flex;
+      align-items:center;
+      justify-content:space-between; /* logo left, toggle right */
+      padding: 10px 24px;
+      box-sizing: border-box;
+      gap: 12px;
+      min-height:56px;
+    }
+
+    /* small logo on left */
+    header .logo {
+      height: 40px;
+      width: auto;
+      display:block;
+      -webkit-user-drag: none;
+      user-select:none;
+      margin-left: 6px;
+    }
+
+    /* close button inside popup: show a dash (–) instead of an X */
+    .nav-close {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 32px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 6px 8px;
+      border-radius: 6px;
+    }
+    .nav-close:focus { outline: 2px solid rgba(210,184,140,0.32); }
+
+    /* bigger dash styling */
+    .nav-close .close-dash {
+      display:inline-block;
+      font-size: 36px;
+      transform: translateY(1px);
+      font-weight: 300;
+      font-family: serif;
+      pointer-events: none;
     }
 
     .hero-intro {
@@ -471,131 +363,11 @@
       .hero-description { font-size: 1rem; }
       .hero-quote { font-size: 1.2rem; max-width: 90%; }
       .hero-quote-subtext { font-size: 0.9rem; }
-      header nav.links-left, header nav.links-right { gap: 10px; }
-    }
-
-    .gallery-section {
-      min-height: 100vh;
-      background: #111;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 4rem 2rem;
-    }
-
-    .gallery-title {
-      font-family: 'Chomsky', serif;
-      font-size: 2.5rem;
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      grid-gap: 1.5rem;
-      width: 100%;
-      max-width: 1000px;
-    }
-
-    .gallery-item img {
-      width: 100%;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: transform 0.3s ease, filter 0.3s ease;
-      filter: grayscale(100%);
-    }
-
-    .gallery-item img:hover {
-      transform: scale(1.05);
-      filter: grayscale(0%);
-    }
-
-    .gallery-btn {
-      margin-top: 2rem;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      background: #222;
-      color: white;
-      text-decoration: none;
-      transition: background 0.3s ease, color 0.3s ease;
-    }
-
-    .gallery-btn:hover {
-      background: white;
-      color: black;
-    }
-
-    transform: translateZ(0) scale3d(1.02,1.02,1);
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    -moz-transform: translate3d(0,0,0);
-    -webkit-transform: translate3d(0,0,0);
-    opacity:0.999;
-    will-change: transform, filter, opacity;
-
-    .lightbox {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.9);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      padding: 1rem;
-      z-index: 9999;
-    }
-
-    .lightbox.active {
-      display: flex;
-    }
-
-    .lightbox-img {
-      max-width: 90%;
-      max-height: 70%;
-      border-radius: 12px;
-      margin-bottom: 1rem;
-    }
-
-    .lightbox-desc {
-      color: #ddd;
-      font-size: 1rem;
-      max-width: 90%;
-      text-align: center;
-    }
-
-    .lightbox-close {
-      position: absolute;
-      top: 20px;
-      right: 40px;
-      font-size: 2rem;
-      color: white;
-      cursor: pointer;
     }
 
     html, body {
       max-width: 100%;
       overflow-x: hidden;
-    }
-
-    .gallery-item img {
-      transform: translateZ(0);
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      -moz-backface-visibility: hidden;
-      will-change: transform, filter, opacity;
-    }
-
-    .gallery-item img:hover {
-      transform: scale(1.03);
-    }
-
-    .gallery-grid {
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     }
 
     .hero-intro, .content-container {
@@ -605,26 +377,8 @@
     }
 
     @media only screen and (max-width: 768px) {
-      .gallery-grid {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-        grid-gap: 1rem;
-      }
       .hero-intro { height: auto; padding: 20px 10px; }
       .content-container { padding: 20px 10px; margin: 20px auto; }
-    }
-
-    /* INDEX-PAGE: override mosaic layout so gallery items use 2-column layout with aspect rules
-       This resets any earlier nth-child grid placements and enforces:
-       left column = wider (2fr) for 16:9 images; right column = narrower (1fr) for squares. */
-    .gallery-grid { display:grid; grid-template-columns: 2fr 1fr; gap:18px; align-items:start; }
-    .gallery-grid .gallery-item { grid-column: auto !important; grid-row: auto !important; }
-    .gallery-item.aspect-16-9 { aspect-ratio: 16 / 9; }
-    .gallery-item.aspect-1-1 { aspect-ratio: 1 / 1; }
-
-    @media (max-width: 980px) {
-      .gallery-grid { grid-template-columns: 1fr; }
-      .gallery-item.aspect-16-9,
-      .gallery-item.aspect-1-1 { aspect-ratio: auto; width:100%; }
     }
 
     /* --- New/Overriding styles specifically for this David page about section --- */
@@ -803,24 +557,51 @@
   </style>
 </head>
 <body>
-  <!-- Header (exact copy from index.html) -->
-  <header class="site">
-    <nav class="links-left">
-      <a href="https://bengurwaves.com">Home</a>
-      <a href="releases.html">Releases</a>
-      <a href="merch.html">Merch</a>
-      <a href="gallery.html">Gallery</a>
-      <a href="me.html">Me</a>
-      <a href="david.html">David</a>
-    </nav>
+  <!-- Header: logo on left, only hamburger on the RIGHT -->
+  <header class="site" role="banner">
+    <!-- Left small logo -->
+    <img src="My-Logo-_Drawn_.svg" alt="BenGurWaves logo" class="logo" />
 
-    <nav class="links-right">
-      <a href="https://youtube.com/@bengurwaves"><img src="icons8-youtube-logo.svg" alt="YouTube"></a>
-      <a href="https://instagram.com/bengurwaves"><img src="icons8-instagram-logo.svg" alt="Instagram"></a>
-      <a href="https://www.tiktok.com/@ben_gur_waves"><img src="tiktok-48.png" alt="TikTok"></a>
-    </nav>
+    <!-- Right hamburger toggle.
+         When closed shows a "+"; when opened the three dashes appear and animate into an "X" -->
+    <button class="nav-toggle" id="navToggle" aria-label="Open navigation" aria-expanded="false" aria-controls="popupNav">
+      <span class="dash"></span>
+      <span class="dash"></span>
+      <span class="dash"></span>
+      <span class="plus">+</span>
+    </button>
   </header>
 
+  <!-- Popup nav backdrop + panel (slides from right) -->
+  <div class="popup-nav-backdrop" id="popupBackdrop" tabindex="-1" aria-hidden="true"></div>
+
+  <nav class="popup-nav" id="popupNav" aria-hidden="true" aria-label="Main navigation">
+    <div class="nav-head">
+      <div class="nav-title">Menu</div>
+      <!-- Close button: a dash instead of an X -->
+      <button class="nav-close" id="navCloseBtn" aria-label="Close navigation">
+        <span class="close-dash">–</span>
+      </button>
+    </div>
+
+    <div class="nav-links" role="menu">
+      <a href="https://bengurwaves.com" role="menuitem" tabindex="-1">Home</a>
+      <a href="releases.html" role="menuitem" tabindex="-1">Releases</a>
+      <a href="merch.html" role="menuitem" tabindex="-1">Merch</a>
+      <a href="gallery.html" role="menuitem" tabindex="-1">Gallery</a>
+      <a href="me.html" role="menuitem" tabindex="-1">Me</a>
+      <a href="david.html" role="menuitem" tabindex="-1">David</a>
+    </div>
+
+    <div class="spacer" aria-hidden="true"></div>
+
+    <div class="social-row" aria-hidden="true">
+      <a href="https://youtube.com/@bengurwaves" title="YouTube"><img src="icons8-youtube-logo.svg" alt="YouTube"></a>
+      <a href="https://instagram.com/bengurwaves" title="Instagram"><img src="icons8-instagram-logo.svg" alt="Instagram"></a>
+      <a href="https://www.tiktok.com/@ben_gur_waves" title="TikTok"><img src="tiktok-48.png" alt="TikTok"></a>
+    </div>
+  </nav>
+  
   <!-- ABOUT SECTION: full-screen feature for David -->
   <section class="featured about-featured" id="about-section" aria-labelledby="about-title">
     <div class="about-left">
@@ -912,5 +693,77 @@
       document.body.classList.add("loaded");
     });
   </script>
+
+  <script>
+    (function(){
+      const navToggle = document.getElementById('navToggle');
+      const popup = document.getElementById('popupNav');
+      const backdrop = document.getElementById('popupBackdrop');
+      const navCloseBtn = document.getElementById('navCloseBtn');
+      const links = Array.from(popup.querySelectorAll('.nav-links a'));
+
+      function openNav() {
+        popup.classList.add('open');
+        backdrop.classList.add('active');
+        navToggle.classList.add('open');
+        navToggle.setAttribute('aria-expanded', 'true');
+        popup.setAttribute('aria-hidden', 'false');
+        backdrop.setAttribute('aria-hidden', 'false');
+        // focus first link after animation
+        setTimeout(()=> links[0] && links[0].focus(), 160);
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeNav() {
+        popup.classList.remove('open');
+        backdrop.classList.remove('active');
+        navToggle.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+        popup.setAttribute('aria-hidden', 'true');
+        backdrop.setAttribute('aria-hidden', 'true');
+        navToggle.focus();
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+      }
+
+      navToggle.addEventListener('click', (e) => {
+        const isOpen = popup.classList.contains('open');
+        if(isOpen) closeNav(); else openNav();
+      });
+
+      navCloseBtn && navCloseBtn.addEventListener('click', closeNav);
+      backdrop && backdrop.addEventListener('click', closeNav);
+
+      // close on escape
+      document.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape' && popup.classList.contains('open')) {
+          closeNav();
+        }
+      });
+
+      // simple focus trap: cycle within links + close button
+      popup.addEventListener('keydown', (e) => {
+        if(e.key !== 'Tab') return;
+        const focusable = [ ...links, navCloseBtn ];
+        const idx = focusable.indexOf(document.activeElement);
+        if(e.shiftKey && idx === 0) {
+          e.preventDefault();
+          focusable[focusable.length-1].focus();
+        } else if(!e.shiftKey && idx === focusable.length -1) {
+          e.preventDefault();
+          focusable[0].focus();
+        }
+      });
+
+      function setLinkTabindex(open){
+        links.forEach(a => a.tabIndex = open ? 0 : -1);
+      }
+      setLinkTabindex(false);
+      const obs = new MutationObserver(()=> setLinkTabindex(popup.classList.contains('open')));
+      obs.observe(popup, { attributes: true, attributeFilter: ['class'] });
+    })();
+  </script>
+  
 </body>
 </html>
