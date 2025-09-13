@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title> Me | BenGurWaves</title>
+
+  <style> 
+    /* ==== Copy of all index.html styles ==== */
+    html {
+      height: 100%;
+      background: url('DSC_1391_Mono.JPG.png') no-repeat center center fixed;
+      background-size: cover;
+      background-color: black;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Times New Roman', serif;
+      color: #fff;
+      text-align: center;
+      min-height: 100%;
+      opacity: 0;
+      transition: opacity 1s ease;
+      position: relative;
+      overflow-x: hidden;
+    }
+    body.loaded { opacity: 1; }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: url('DSC_1391_Color.png') no-repeat center center fixed;
+      background-size: cover;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1s ease;
+      z-index: -1;
+    }
+    body.colorful-bg::before { opacity: 1; }
+
+    /* ===== Popup Navigation (slides from RIGHT, max half viewport) ===== */
+    .nav-toggle {
+      width:44px;
+      height:36px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:none;
+      background:transparent;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+    }
+    .nav-toggle:focus { outline: 2px solid rgba(210,184,140,0.35); border-radius:6px; }
+
+    /* the three dash lines (kept for open -> X animation) */
+    .nav-toggle .dash {
+      width:22px;
+      height:2px;
+      background:#fff;
+      display:block;
+      margin:3px 0;
+      transition: transform .25s ease, opacity .2s ease;
+    }
+
+    /* NEW: plus shown when nav is CLOSED */
+    .nav-toggle .plus {
+      font-size: 22px;
+      color: #fff;
+      display: inline-block;
+      line-height: 1;
+      font-weight: 700;
+      font-family: 'Times New Roman', serif;
+      transition: transform .18s ease, opacity .12s ease;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* hide dashes when nav is closed, show plus */
+    .nav-toggle:not(.open) .dash { display: none; }
+    .nav-toggle:not(.open) .plus { display: inline-block; }
+
+    /* when open, hide plus and show & animate dashes into X */
+    .nav-toggle.open .plus { display: none; }
+    .nav-toggle.open .dash { display: block; }
+
+    .nav-toggle.open .dash:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .nav-toggle.open .dash:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-toggle.open .dash:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    .popup-nav-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+      z-index: 2500;
+    }
+    .popup-nav-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .popup-nav {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: min(50%, 420px);
+      transform: translateX(106%);
+      background: linear-gradient(180deg, rgba(6,6,6,0.96), rgba(10,10,10,0.98));
+      box-shadow: -24px 0 60px rgba(0,0,0,0.65);
+      transition: transform .32s cubic-bezier(.2,.9,.2,1);
+      z-index: 2600;
+      display:flex;
+      flex-direction:column;
+      padding: 28px 20px;
+      box-sizing: border-box;
+      gap: 18px;
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+    }
+    .popup-nav.open { transform: translateX(0); }
+
+    .popup-nav .nav-head {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .popup-nav .nav-title {
+      font-family: 'Chomsky', serif;
+      font-size: 1.25rem;
+      color: #fff;
+      letter-spacing: .2px;
+    }
+
+    .popup-nav .nav-links {
+      margin-top: 6px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+
+    .popup-nav .nav-links a {
+      display:block;
+      padding: 12px 14px;
+      color: #fff;
+      text-decoration: none;
+      font-family: 'Times New Roman', serif;
+      font-size: 1.05rem;
+      border-radius: 8px;
+      transition: background .14s ease, transform .12s ease;
+    }
+    .popup-nav .nav-links a:hover,
+    .popup-nav .nav-links a:focus {
+      background: rgba(210,184,140,0.10);
+      transform: translateX(-6px);
+      outline: none;
+    }
+
+    .popup-nav .spacer { flex:1; }
+
+    .popup-nav .social-row {
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content:center;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .popup-nav .social-row a img {
+      width:28px;
+      height:28px;
+      filter: invert(1) brightness(1);
+      display:block;
+    }
+    .popup-nav .social-row a:hover img { filter: invert(0.9) brightness(1.1); transform: translateY(-2px); }
+
+    /* header tweaks: logo left, hamburger right */
+    header.site {
+      position: relative;
+      z-index: 2;
+      display:flex;
+      align-items:center;
+      justify-content:space-between; /* logo left, toggle right */
+      padding: 10px 24px;
+      box-sizing: border-box;
+      gap: 12px;
+      min-height:56px;
+    }
+
+    /* small logo on left */
+    header .logo {
+      height: 40px;
+      width: auto;
+      display:block;
+      -webkit-user-drag: none;
+      user-select:none;
+      margin-left: 6px;
+    }
+
+     /* close button inside popup: show a dash (–) instead of an X */
+    .nav-close {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 32px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 6px 8px;
+      border-radius: 6px;
+    }
+    .nav-close:focus { outline: 2px solid rgba(210,184,140,0.32); }
+
+    /* bigger dash styling */
+    .nav-close .close-dash {
+      display:inline-block;
+      font-size: 36px;
+      transform: translateY(1px);
+      font-weight: 300;
+      font-family: serif;
+      pointer-events: none;
+    }
+
+    /* Footer social icons row */
+    .footer-socials {
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      justify-content:center;
+      align-items:center;
+      padding:12px 8px;
+    }
+    .footer-socials a img {
+      width:28px;
+      height:28px;
+      display:inline-block;
+      filter: invert(0.9) brightness(1);
+      transition: transform .18s ease, filter .18s ease;
+    }
+    .footer-socials a:hover img { transform: translateY(-4px); filter: invert(0.8) brightness(1.05); }
+
+    .footer-copyright {
+      text-align:center;
+      color:#aaa;
+      padding:6px 0 18px 0;
+      font-size:0.9rem;
+    }
+
+    /* ensure icons contrast on white background */
+    .footer-socials-wrap .footer-socials a img {
+      filter: none; /* use original icon colors */
+      display:inline-block;
+      width:28px;
+      height:28px;
+      transition: transform .18s ease, filter .18s ease;
+    }
+    .footer-socials-wrap .footer-socials a:hover img { transform: translateY(-4px); }
+
+    /* Small responsive helper */
+    @media (max-width:860px){
+      header .logo { height:36px; }
+      .popup-nav { width: 92vw; max-width: 420px; }
+      /* make the social pill shrink on small screens if needed */
+      .footer-socials-wrap { padding: 6px 8px; border-radius: 10px; }
+    }
+    
+    .content-container {
+      max-width: 1100px;
+      margin: 60px auto;
+      padding: 40px 20px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 8px;
+      line-height: 1.6;
+      text-align: left;
+    }
+    .content-container h1 {
+      font-family: 'Chomsky', serif;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+
+     /* ================= Full Background & Body ================= */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      background: url('DSC_1391_Mono.JPG.png') no-repeat center center fixed;
+      background-size: 101% 101%; /* stretches edge to edge */
+      background-color: black;
+    }
+
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Times New Roman', serif;
+      color: #fff;
+      text-align: center;
+      min-height: 100%;
+      opacity: 0;
+      transition: opacity 1s ease;
+      position: relative;
+      overflow-x: hidden;
+    }
+    body.loaded {
+      opacity: 1;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 101%;
+      height: 100%;
+      background: url('DSC_1391_Color.png') no-repeat center center fixed;
+      background-size: 101% 101%; /* matches black & white */
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1s ease;
+      z-index: -1;
+    }
+
+    body.colorful-bg::before {
+      opacity: 1;
+    }
+
+    .intro-fade {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1.5s ease, transform 1.5s ease;
+      transition-delay: 2s;
+    }
+    body.loaded .intro-fade {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    
+  </style>
+</head>
+<body>
+  <!-- Header: logo on left, only hamburger on the RIGHT -->
+  <header class="site" role="banner">
+    <!-- Left small logo -->
+    <img src="My-Logo-_Drawn_.svg" alt="BenGurWaves logo" class="logo" />
+
+    <!-- Right hamburger toggle.
+         When closed shows a "+"; when opened the three dashes appear and animate into an "X" -->
+    <button class="nav-toggle" id="navToggle" aria-label="Open navigation" aria-expanded="false" aria-controls="popupNav">
+      <span class="dash"></span>
+      <span class="dash"></span>
+      <span class="dash"></span>
+      <span class="plus">+</span>
+    </button>
+  </header>
+
+  <!-- Popup nav backdrop + panel (slides from right) -->
+  <div class="popup-nav-backdrop" id="popupBackdrop" tabindex="-1" aria-hidden="true"></div>
+
+  <nav class="popup-nav" id="popupNav" aria-hidden="true" aria-label="Main navigation">
+    <div class="nav-head">
+      <div class="nav-title">Menu</div>
+      <!-- Close button: a dash instead of an X -->
+      <button class="nav-close" id="navCloseBtn" aria-label="Close navigation">
+        <span class="close-dash">–</span>
+      </button>
+    </div>
+
+    <div class="nav-links" role="menu">
+      <a href="https://www.bengurwaves.com" role="menuitem" tabindex="-1">Home</a>
+      <a href="releases.html" role="menuitem" tabindex="-1">Releases</a>
+      <a href="merch.html" role="menuitem" tabindex="-1">Merch</a>
+      <a href="gallery.html" role="menuitem" tabindex="-1">Gallery</a>
+      <a href="me.html" role="menuitem" tabindex="-1">Me</a>
+      <a href="david.html" role="menuitem" tabindex="-1">David</a>
+    </div>
+
+    <div class="spacer" aria-hidden="true"></div>
+
+    <div class="social-row" aria-hidden="true">
+      <a href="https://youtube.com/@bengurwaves" title="YouTube"><img src="icons8-youtube-logo.svg" alt="YouTube"></a>
+      <a href="https://instagram.com/bengurwaves" title="Instagram"><img src="icons8-instagram-logo.svg" alt="Instagram"></a>
+      <a href="https://www.tiktok.com/@ben_gur_waves" title="TikTok"><img src="tiktok-48.png" alt="TikTok"></a>
+    </div>
+  </nav>
+
+
+  <!-- Me page content -->
+  <main>
+    <div class="content-container">
+      <h1>Me Page – Under Construction </h1>
+      <p>
+        This page is currently tuning its strings, hitting the right notes, and maybe even 
+        trying to freestyle without hitting a wrong chord. Check back soon to hear the full symphony!
+      </p>
+      <p>
+        – BenGurWavesTeam
+      </p>
+    </div>
+  </main>
+
+ <!-- Footer: social icons (first line), then copyright (second line) -->
+  <footer style="padding:12px 10px 28px 10px; background:#000;">
+   <div class="footer-copyright">
+      ©BenGurWaves2025
+    </div>
+    
+    <!-- Wrapped the existing footer-socials in a white rounded "pill" -->
+    <div class="footer-socials-wrap" aria-hidden="false" title="Social links background">
+      <div class="footer-socials" aria-label="Social links">
+        <a href="https://www.youtube.com/@bengurwaves" target="_blank" rel="noopener"><img src="icons8-youtube-logo.svg" alt="YouTube"></a>
+        <a href="https://www.instagram.com/bengurwaves/" target="_blank" rel="noopener"><img src="icons8-instagram-logo.svg" alt="Instagram"></a>
+        <a href="https://www.tiktok.com/@ben_gur_waves" target="_blank" rel="noopener"><img src="tiktok-48.png" alt="TikTok"></a>
+        <a href="http://rumble.com/bengurwaves" target="_blank" rel="noopener"><img src="icons8-rumble-100.png" alt="Rumble"></a>
+        <a href="https://vimeo.com/bengurwaves" target="_blank" rel="noopener"><img src="icons8-vimeo.svg" alt="Vimeo"></a>
+        <a href="https://my-store-1098a67.creator-spring.com/" target="_blank" rel="noopener"><img src="icons8-shirt-100.png" alt="Merch"></a>
+        <a href="https://www.threads.com/@bengurwaves" target="_blank" rel="noopener"><img src="threads-white-icon.svg" alt="Threads"></a>
+        <a href="https://www.facebook.com/BenGurWaves/" target="_blank" rel="noopener"><img src="icons8-facebook.svg" alt="Facebook"></a>
+        <a href="https://www.soundcloud.com/bengurwaves" target="_blank" rel="noopener"><img src="icons8-soundcloud-logo.svg" alt="SoundCloud"></a>
+        <a href="https://bengurwaves.bandcamp.com/" target="_blank" rel="noopener"><img src="icons8-bandcamp.svg" alt="Bandcamp"></a>
+      </div>
+    </div>
+
+    
+  </footer>
+
+  <script>
+    window.addEventListener('load', () => {
+      document.body.classList.add('loaded');
+    });
+    
+    (function(){
+      const navToggle = document.getElementById('navToggle');
+      const popup = document.getElementById('popupNav');
+      const backdrop = document.getElementById('popupBackdrop');
+      const navCloseBtn = document.getElementById('navCloseBtn');
+      const links = Array.from(popup.querySelectorAll('.nav-links a'));
+
+      function openNav() {
+        popup.classList.add('open');
+        backdrop.classList.add('active');
+        navToggle.classList.add('open');
+        navToggle.setAttribute('aria-expanded', 'true');
+        popup.setAttribute('aria-hidden', 'false');
+        backdrop.setAttribute('aria-hidden', 'false');
+        // focus first link after animation
+        setTimeout(()=> links[0] && links[0].focus(), 160);
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeNav() {
+        popup.classList.remove('open');
+        backdrop.classList.remove('active');
+        navToggle.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+        popup.setAttribute('aria-hidden', 'true');
+        backdrop.setAttribute('aria-hidden', 'true');
+        navToggle.focus();
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+      }
+
+      navToggle.addEventListener('click', (e) => {
+        const isOpen = popup.classList.contains('open');
+        if(isOpen) closeNav(); else openNav();
+      });
+
+      navCloseBtn && navCloseBtn.addEventListener('click', closeNav);
+      backdrop && backdrop.addEventListener('click', closeNav);
+
+      // close on escape
+      document.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape' && popup.classList.contains('open')) {
+          closeNav();
+        }
+      });
+
+      // simple focus trap: cycle within links + close button
+      popup.addEventListener('keydown', (e) => {
+        if(e.key !== 'Tab') return;
+        const focusable = [ ...links, navCloseBtn ];
+        const idx = focusable.indexOf(document.activeElement);
+        if(e.shiftKey && idx === 0) {
+          e.preventDefault();
+          focusable[focusable.length-1].focus();
+        } else if(!e.shiftKey && idx === focusable.length -1) {
+          e.preventDefault();
+          focusable[0].focus();
+        }
+      });
+
+      function setLinkTabindex(open){
+        links.forEach(a => a.tabIndex = open ? 0 : -1);
+      }
+      setLinkTabindex(false);
+      const obs = new MutationObserver(()=> setLinkTabindex(popup.classList.contains('open')));
+      obs.observe(popup, { attributes: true, attributeFilter: ['class'] });
+    })();
+  </script>
+  
+</body>
+</html>
