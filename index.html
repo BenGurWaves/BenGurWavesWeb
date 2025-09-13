@@ -3,10 +3,38 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>BenGurWaves — Home</title>
+  <title>Home | BenGurWaves</title>
+  <meta name="description" content="BenGurWaves – piano and instrumental music, sheet music, and original compositions. Listen, download, and explore the journey.">
 
 
   <style>
+    .about-section {
+  position: relative;
+  margin-bottom: 40px; /* spacing to footer; adjust as needed */
+}
+
+.about-button {
+  margin-top: 16px; /* small space under the text */
+  text-align: center; /* CENTER the button */
+}
+
+.about-button .btn {
+  display: inline-block;
+  padding: 12px 22px;
+  background: rgba(210,184,140,0.95); /* tan button color */
+  color: #111; /* text color */
+  font-weight: 700;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background .18s ease, color .18s ease, transform .12s ease;
+}
+
+.about-button .btn:hover {
+  background: #000;
+  color: #d2b48c;
+  transform: translateY(-2px);
+}
+
     /* Pre-save + Listen button styles */
     .pre-save-btn, .listen-btn {
       display:inline-block;
@@ -521,12 +549,18 @@
     }
 
     /* ================= Full Background & Body ================= */
-    html {
+    html, body {
       height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
       background: url('DSC_1391_Mono.JPG.png') no-repeat center center fixed;
-      background-size: cover;
+      background-size: 101% 101%; /* stretches edge to edge */
       background-color: black;
     }
+
 
     body {
       margin: 0;
@@ -549,18 +583,20 @@
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
+      width: 101%;
       height: 100%;
       background: url('DSC_1391_Color.png') no-repeat center center fixed;
-      background-size: cover;
+      background-size: 101% 101%; /* matches black & white */
       opacity: 0;
       pointer-events: none;
       transition: opacity 1s ease;
       z-index: -1;
     }
+
     body.colorful-bg::before {
       opacity: 1;
     }
+
 
     .hero-intro {
       height: 890px;
@@ -823,7 +859,7 @@
     </div>
 
     <div class="nav-links" role="menu">
-      <a href="index.html" role="menuitem" tabindex="-1">Home</a>
+      <a href="https://www.bengurwaves.com" role="menuitem" tabindex="-1">Home</a>
       <a href="releases.html" role="menuitem" tabindex="-1">Releases</a>
       <a href="merch.html" role="menuitem" tabindex="-1">Merch</a>
       <a href="gallery.html" role="menuitem" tabindex="-1">Gallery</a>
@@ -943,6 +979,9 @@
         <p style="font-family:'Times New Roman', serif; font-size:1rem; line-height:1.6; opacity:0.9;">
           Inspired by the subtle interplay of light and shadow, sound and silence, BenGurWaves invites listeners to step into a world where every note tells a story, and every melody is a reflection of the soul.
         </p>
+        <div class="about-button">
+         <a href="me.html" class="btn">More About Me</a>
+       </div>
       </div>
     </div>
   </section>
